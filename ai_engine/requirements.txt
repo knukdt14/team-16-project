@@ -1,0 +1,33 @@
+# =====================================================================
+# 전기차 보조금 RAG 챗봇 - AI Engine
+# 설치: pip install -r requirements.txt
+#
+# torch 는 GPU 환경에 따라 별도 설치 필요 (하단 주석 참고)
+# =====================================================================
+
+# ----- PDF 파싱 (load_pdf.py) -----
+pdfplumber              # 한국어 공백 보존됨. pypdf 는 공백이 전부 사라져 사용 불가
+
+# ----- 임베딩 & 벡터DB (build_vectorstore.py) -----
+sentence-transformers   # Qwen3-Embedding-0.6B 로드
+transformers>=4.51      # qwen3 아키텍처 인식에 필요 (하위 버전은 KeyError)
+chromadb                # 벡터스토어
+
+# ----- 검색 (rag_chain.py) -----
+rank-bm25               # BM25 키워드 검색
+kiwipiepy               # 한국어 형태소 분석 (BM25 토크나이징)
+numpy
+
+# ----- 금액 조회 (lookup.py) -----
+pandas
+
+# ----- LLM 추론 (rag_chain.py) -----
+accelerate              # device_map 처리
+
+# ---------------------------------------------------------------------
+# torch 는 여기에 넣지 않는다. 환경별로 설치 명령이 다르기 때문.
+#
+#   CPU:            pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   RTX 50 시리즈:   pip install torch --index-url https://download.pytorch.org/whl/cu129
+#                   (sm_120. cu126 이하 빌드는 커널이 없어 실행 불가)
+# ---------------------------------------------------------------------

@@ -216,3 +216,39 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# -- 인환 ---------------------------------------------------------------------
+# ===== 재생성 가능한 산출물 =====
+data/vectorstore/          # build_vectorstore.py 로 재생성
+data/chunks.jsonl          # load_pdf.py 로 재생성
+eval/results_detail.csv    # evaluate.py 로 재생성 (문항별 상세, 용량 큼)
+
+# ===== 모델 캐시 =====
+models/
+.cache/
+*.safetensors
+*.bin
+
+# ===== 가상환경 =====
+.pj2/
+venv/
+.venv/
+env/
+
+# ===== 파이썬 =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# ===== 환경변수 =====
+.env
+.env.local
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini

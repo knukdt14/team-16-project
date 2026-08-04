@@ -1,0 +1,4 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart        # 파일 업로드용
