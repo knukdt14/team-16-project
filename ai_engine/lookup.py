@@ -130,10 +130,19 @@ class SubsidyLookup:
 
     # ------------------------------------------------------------ 모델
     def resolve_model(self, text: str):
-        """'EV6' → 해당 키워드를 포함한 실제 모델명 목록"""
+        """'EV6' → 해당 키워드를 포함한 실제 모델명 목록. 완전 일치 트림이 존재하면 우선 적용."""
         if not text:
             return []
-        key = MODEL_ALIASES.get(normalize(text), normalize(text))
+        norm_text = normalize(text)
+        exact = self.df[self.df["_model_norm"] == norm_text]
+        if not exact.empty:
+            return sorted(exact["모델명"].unique())
+
+        key = MODEL_ALIASES.get(norm_text, norm_text)
+        exact_key = self.df[self.df["_model_norm"] == key]
+        if not exact_key.empty:
+            return sorted(exact_key["모델명"].unique())
+
         hit = self.df[self.df["_model_norm"].str.contains(key, na=False)]
         return sorted(hit["모델명"].unique())
 

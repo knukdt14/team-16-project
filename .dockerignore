@@ -1,0 +1,10 @@
+.git
+.venv
+.vscode
+node_modules
+.next
+__pycache__
+*.pdf
+ev_subsidy_data_all.csv
+report
+slides

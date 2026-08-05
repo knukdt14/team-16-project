@@ -192,6 +192,10 @@ async def compare(
         if df.empty:
             raise HTTPException(404, f"'{sido}' 지역 데이터가 없습니다.")
 
+    df = df.dropna(subset=["보조금(만원)"])
+    if df.empty:
+        raise HTTPException(404, f"'{model}' 에 대한 유효한 보조금 데이터가 없습니다.")
+
     # 지역별 최고 금액 1건씩
     idx = df.groupby(["시도", "시군구"])["보조금(만원)"].idxmax()
     df = (df.loc[idx]

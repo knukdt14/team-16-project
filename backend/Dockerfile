@@ -34,7 +34,7 @@ EXPOSE 8000
 # 인덱스가 없으면 자동 생성 후 서버 기동
 # (Codespaces 에서 clone 직후에도 docker compose up 한 번으로 동작하도록)
 COPY backend/entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=5 \
     CMD curl -fs http://localhost:8000/health || exit 1
