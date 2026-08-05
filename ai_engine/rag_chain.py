@@ -11,15 +11,30 @@ rag_chain.py
    Kiwi 는 "EV6" 를 ['EV','6'] 으로 쪼개는데, 이것만 쓰면
    EV6 와 EV9 의 구분력이 약해진다. 원본 영숫자 덩어리도 토큰에 추가.
 
-3) 하이브리드 결합은 RRF(Reciprocal Rank Fusion).
+3) 하이브리드 결합은 가중 RRF(Reciprocal Rank Fusion).
    Dense 점수(코사인)와 BM25 점수(무한대 범위)는 스케일이 달라
-   가중합이 불안정하다. 순위 기반 결합이 튜닝 없이 안정적이다.
+   가중합이 불안정하므로 순위 기반으로 결합한다.
+
+   [실측 결과] 가중치 스윕(eval/results_sweep.csv) 결과 BM25 비중이
+   커질수록 성능이 단조 감소하여, Dense 단독이 최적으로 확인됨.
+
+       w_dense 1.00 → MRR 0.5020   (채택)
+       w_dense 0.90 → MRR 0.4953
+       w_dense 0.70 → MRR 0.4487
+       w_dense 0.00 → MRR 0.2890
+
+   단, 평가셋이 자연어 질의 위주로 작성되어(원문 표현 회피)
+   BM25 가 강점을 보이는 정확 매칭 질의(조항번호·트림명 등)가
+   포함되지 않았다. BM25 자체가 무용한 것이 아니라
+   현 평가셋의 질의 유형에서 기여하지 못한 것으로 해석해야 한다.
+   따라서 hybrid 모드는 제거하지 않고 비교·확장용으로 유지한다.
 
 4) 금액은 절대 LLM 이 생성하지 않는다. lookup.py 결과만 사용한다.
    프롬프트에서도 문서에 없는 숫자 생성을 강하게 금지한다.
 """
 
 import json
+import os
 import re
 from pathlib import Path
 
@@ -40,7 +55,10 @@ from build_vectorstore import (
 
 CHUNKS_PATH = Path("../data/chunks.jsonl")
 
-LLM_MODEL = "Qwen/Qwen2.5-3B-Instruct"   # 배포(CPU) 고려한 소형 instruct 모델
+# 환경변수로 모델 전환. 기본은 로컬/시연용 3B.
+# Codespaces 등 저사양 환경은 compose 에서 LLM_MODEL 을 1.5B 로 지정한다.
+LLM_MODEL = os.getenv("LLM_MODEL", "Qwen/Qwen2.5-3B-Instruct")
+MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "400"))
 
 _kiwi = Kiwi()
 
@@ -93,8 +111,14 @@ class Retriever:
         return [{"id": self.ids[i], "score": float(scores[i])} for i in top]
 
     # ---------------- 하이브리드 (RRF)
-    def search(self, query: str, k: int = 5, mode: str = "hybrid", rrf_k: int = 60):
-        """mode: dense | bm25 | hybrid"""
+    def search(self, query: str, k: int = 5, mode: str = "hybrid",
+               rrf_k: int = 60, w_dense: float = 1.0, w_bm25: float = 0.0):
+        """
+        mode: dense | bm25 | hybrid
+        w_dense / w_bm25: 가중 RRF 비율.
+            기본값은 스윕 결과 최적점(1.0 : 0.0 = Dense 단독).
+            sweep_weights.py 로 재탐색 가능.
+        """
         if mode == "dense":
             hits = self.search_dense(query, k)
         elif mode == "bm25":
@@ -105,9 +129,9 @@ class Retriever:
             b = self.search_bm25(query, pool)
             fused = {}
             for rank, h in enumerate(d):
-                fused[h["id"]] = fused.get(h["id"], 0) + 1 / (rrf_k + rank + 1)
+                fused[h["id"]] = fused.get(h["id"], 0) + w_dense / (rrf_k + rank + 1)
             for rank, h in enumerate(b):
-                fused[h["id"]] = fused.get(h["id"], 0) + 1 / (rrf_k + rank + 1)
+                fused[h["id"]] = fused.get(h["id"], 0) + w_bm25 / (rrf_k + rank + 1)
             hits = [
                 {"id": i, "score": s}
                 for i, s in sorted(fused.items(), key=lambda x: -x[1])[:k]
@@ -169,11 +193,12 @@ class Generator:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            dtype=torch.float16 if self.device == "cuda" else torch.float32,
+            dtype=torch.float16 if self.device == "cuda" else torch.bfloat16,
             device_map=self.device,
         )
 
-    def generate(self, messages: list, max_new_tokens: int = 400) -> str:
+    def generate(self, messages: list, max_new_tokens: int = None) -> str:
+        max_new_tokens = max_new_tokens or MAX_NEW_TOKENS
         text = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
@@ -214,7 +239,7 @@ if __name__ == "__main__":
     for q in queries:
         print("=" * 60)
         print(f"Q. {q}")
-        for mode in ["dense", "bm25", "hybrid"]:
+        for mode in ["dense", "bm25"]:
             hits = r.search(q, k=3, mode=mode)
             print(f"\n  [{mode}]")
             for i, h in enumerate(hits, 1):

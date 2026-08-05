@@ -129,7 +129,7 @@ class Pipeline:
 
     # ------------------------------------------------------------ 메인
     def answer(self, question: str, region: str = None, model: str = None,
-               top_k: int = 4, mode: str = "hybrid") -> dict:
+               top_k: int = 4, mode: str = "dense") -> dict:
         """
         반환:
           status   : answered | need_info

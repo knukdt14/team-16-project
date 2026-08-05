@@ -46,7 +46,9 @@ class ChatRequest(BaseModel):
         None, description="화면에서 선택한 차종", examples=["EV6"])
     top_k: int = Field(4, ge=1, le=10, description="검색할 문서 수")
     mode: Literal["dense", "bm25", "hybrid"] = Field(
-        "hybrid", description="검색 방식. 비교 실험용으로 노출")
+        "dense",
+        description="검색 방식. 평가셋 기준 dense 가 최적이라 기본값. "
+                    "bm25/hybrid 는 비교 실험용")
 
 
 class ChatResponse(BaseModel):

@@ -1,151 +1,151 @@
 ﻿qid,mode,question,hit,rr,recall,gold,retrieved
-Q001,dense,청년이 처음으로 차 사면 지원 더 해주나요?,1,0.5,1.0,guide_0045,guide_0052|guide_0045|guide_0085|guide_0090|guide_0058
-Q002,dense,만 나이 몇 살까지 청년으로 쳐주나요?,1,1.0,1.0,guide_0045|guide_0052,guide_0045|guide_0052|guide_0058|guide_0007|guide_0069
-Q003,dense,애가 셋인데 얼마나 더 나와요?,0,0.0,0.0,guide_0046,guide_0045|guide_0054|guide_0068|guide_0037|guide_0052
-Q004,dense,형편이 어려운 사람한테 주는 혜택도 있어요?,0,0.0,0.0,guide_0044,guide_0085|guide_0090|guide_0007|guide_0037|guide_0042
-Q005,dense,비싼 차는 지원을 덜 해준다고 들었는데 기준이 뭔가요?,1,0.25,1.0,guide_0037,guide_0041|guide_0065|guide_0068|guide_0037|guide_0054
-Q006,dense,이사 온 지 얼마 안 됐는데 신청 가능한가요?,1,1.0,1.0,guide_0081,guide_0081|guide_0089|guide_0083|guide_0027|guide_0007
-Q007,dense,예전에 한 번 받았는데 또 되나요?,1,1.0,1.0,guide_0020|guide_0090,guide_0090|guide_0020|guide_0064|guide_0048|guide_0049
-Q008,dense,차를 두 대 한꺼번에 사면 둘 다 지원되나요?,1,1.0,1.0,guide_0020|guide_0090,guide_0090|guide_0020|guide_0063|guide_0064|guide_0047
-Q009,dense,타던 경유차 없애고 사면 더 주는 게 있다던데요,0,0.0,0.0,guide_0049,guide_0064|guide_0090|guide_0085|guide_0020|guide_0073
-Q010,dense,영업용으로 손님 태우는 차는 우대해주나요?,0,0.0,0.0,guide_0042|guide_0086,guide_0097|guide_0081|guide_0088|guide_0020|guide_0094
-Q011,dense,계약하고 나서 언제까지 차를 받아야 하나요?,0,0.0,0.0,guide_0083|guide_0087,guide_0089|guide_0098|guide_0106|guide_0023|guide_0007
-Q012,dense,서류 내고 나면 돈은 언제 들어오나요?,1,1.0,1.0,guide_0089,guide_0089|guide_0098|guide_0010|guide_0120|guide_0092
-Q013,dense,중간에 팔면 돈을 토해내야 하나요?,0,0.0,0.0,guide_0104|guide_0105,guide_0049|guide_0073|guide_0058|guide_0054|guide_0106
-Q014,dense,수출하려고 말소하면 얼마나 반납해요?,1,1.0,1.0,guide_0104,guide_0104|guide_0106|guide_0115|guide_0116|guide_0068
-Q015,dense,장사용 트럭 샀다가 금방 팔면 어떻게 되나요?,0,0.0,0.0,guide_0106,guide_0058|guide_0064|guide_0072|guide_0090|guide_0007
-Q016,dense,신청은 어디에 넣는 건가요?,1,0.5,1.0,guide_0082,guide_0092|guide_0082|guide_0089|guide_0027|guide_0098
-Q017,dense,누구를 먼저 뽑아주나요?,1,1.0,1.0,guide_0085,guide_0085|guide_0094|guide_0045|guide_0020|guide_0083
-Q018,dense,배터리 보증이 길면 더 주는 것도 있어요?,1,1.0,1.0,guide_0043,guide_0043|guide_0048|guide_0022|guide_0089|guide_0037
-Q019,dense,부부 공동으로 사면 누구 기준인가요?,0,0.0,0.0,guide_0081,guide_0020|guide_0046|guide_0090|guide_0085|guide_0045
-Q020,dense,아주 작은 전기차는 얼마 나와요?,1,0.3333,1.0,guide_0050,guide_0068|guide_0074|guide_0050|guide_0041|guide_0063
-Q021,dense,렌터카 사업하는데 지원 받을 수 있나요?,1,1.0,1.0,guide_0047,guide_0047|guide_0050|guide_0066|guide_0071|guide_0007
-Q022,dense,거짓으로 신청하면 어떻게 되나요?,0,0.0,0.0,guide_0034|guide_0108|guide_0109,guide_0032|guide_0116|guide_0089|guide_0092|guide_0098
-Q023,dense,지방비는 지자체가 마음대로 정하나요?,0,0.0,0.0,guide_0038,guide_0039|guide_0062|guide_0057|guide_0080|guide_0056
-Q024,dense,차 종류를 도중에 바꿔도 되나요?,1,0.5,1.0,guide_0088,guide_0097|guide_0088|guide_0049|guide_0073|guide_0090
-Q025,dense,보조금 대상 차량인지 어디서 확인해요?,0,0.0,0.0,guide_0021,guide_0083|guide_0018|guide_0095|guide_0089|guide_0085
-Q026,dense,20대 후반인데 차를 한 번도 안 사봤어요 혜택 있나요?,1,1.0,1.0,guide_0045,guide_0045|guide_0052|guide_0090|guide_0085|guide_0064
-Q027,dense,중고로 나온 전기차를 사도 지원해주나요?,0,0.0,0.0,guide_0018,guide_0064|guide_0085|guide_0048|guide_0049|guide_0045
-Q028,dense,누가 신청할 수 있는 건가요? 회사도 되나요?,0,0.0,0.0,guide_0018,guide_0092|guide_0010|guide_0082|guide_0007|guide_0027
-Q029,dense,승용차는 최대 얼마까지 받을 수 있어요?,0,0.0,0.0,guide_0041,guide_0058|guide_0054|guide_0090|guide_0068|guide_0020
-Q030,dense,택배 일 하는데 트럭 사면 더 챙겨주나요?,1,1.0,1.0,guide_0072|guide_0077,guide_0072|guide_0086|guide_0077|guide_0042|guide_0063
-Q031,dense,농사짓는 사람도 우대가 있나요?,1,1.0,1.0,guide_0071|guide_0076,guide_0071|guide_0076|guide_0085|guide_0045|guide_0007
-Q032,dense,작은 가게 하는데 화물차 사면 얼마나 더 받죠?,0,0.0,0.0,guide_0070|guide_0075,guide_0074|guide_0068|guide_0063|guide_0050|guide_0007
-Q033,dense,1톤 트럭은 최대 얼마까지 나오나요?,1,0.5,1.0,guide_0068,guide_0065|guide_0068|guide_0058|guide_0041|guide_0054
-Q034,dense,화물차도 비싸면 지원 안 되나요?,0,0.0,0.0,guide_0067,guide_0065|guide_0074|guide_0068|guide_0041|guide_0094
-Q035,dense,경유 트럭 폐차하면 두 번 받을 수 있어요?,1,1.0,1.0,guide_0064,guide_0064|guide_0090|guide_0048|guide_0106|guide_0020
-Q036,dense,버스는 얼마나 지원되나요?,0,0.0,0.0,guide_0054,guide_0050|guide_0042|guide_0007|guide_0048|guide_0094
-Q037,dense,어린이집 통학버스도 지원 대상인가요?,1,1.0,1.0,guide_0058,guide_0058|guide_0007|guide_0059|guide_0094|guide_0060
-Q038,dense,법인이 버스 여러 대 사도 제한이 없나요?,0,0.0,0.0,guide_0055,guide_0090|guide_0020|guide_0007|guide_0066|guide_0042
-Q039,dense,아주 작은 화물차는 정액으로 준다던데 얼마예요?,1,1.0,1.0,guide_0074,guide_0074|guide_0068|guide_0050|guide_0063|guide_0041
-Q040,dense,장애인이나 유공자도 우선해서 뽑아주나요?,1,1.0,1.0,guide_0085,guide_0085|guide_0007|guide_0094|guide_0090|guide_0020
-Q041,dense,보조금 신청은 일 년에 몇 번 받나요?,0,0.0,0.0,guide_0079,guide_0089|guide_0083|guide_0098|guide_0020|guide_0090
-Q042,dense,군대 가 있어서 거주기간을 못 채웠는데 방법 없을까요?,1,1.0,1.0,guide_0081,guide_0081|guide_0047|guide_0049|guide_0073|guide_0089
-Q043,dense,차상위인데 애도 셋이면 둘 다 받나요?,0,0.0,0.0,guide_0040,guide_0085|guide_0044|guide_0045|guide_0051|guide_0052
-Q044,dense,공항 안에서만 쓰는 차도 지원되나요?,1,1.0,1.0,guide_0019,guide_0019|guide_0050|guide_0068|guide_0074|guide_0072
-Q045,dense,예전에 산 전기차가 오래됐는데 바꾸면 혜택 있어요?,1,0.2,1.0,guide_0048,guide_0064|guide_0049|guide_0085|guide_0073|guide_0048
-Q046,dense,보조금 받은 차를 부모님께 물려줘도 되나요?,0,0.0,0.0,guide_0049|guide_0073,guide_0085|guide_0064|guide_0106|guide_0020|guide_0090
-Q047,dense,나라에서 정한 물량이 지역마다 다른가요?,0,0.0,0.0,guide_0121,guide_0062|guide_0068|guide_0039|guide_0065|guide_0080
-Q048,dense,신청했는데 순서가 밀리면 어떻게 되나요?,1,1.0,0.5,guide_0083|guide_0087,guide_0083|guide_0089|guide_0098|guide_0024|guide_0092
-Q049,dense,차를 사면 언제까지 타야 하나요?,0,0.0,0.0,guide_0104,guide_0090|guide_0020|guide_0064|guide_0089|guide_0045
-Q050,dense,보급사업 공고는 언제 어디에 올라오나요?,1,1.0,1.0,guide_0079,guide_0079|guide_0091|guide_0023|guide_0120|guide_0024
-Q001,bm25,청년이 처음으로 차 사면 지원 더 해주나요?,1,0.5,1.0,guide_0045,guide_0052|guide_0045|guide_0083|guide_0040|guide_0039
-Q002,bm25,만 나이 몇 살까지 청년으로 쳐주나요?,1,1.0,1.0,guide_0045|guide_0052,guide_0052|guide_0045|guide_0023|guide_0039|guide_0048
-Q003,bm25,애가 셋인데 얼마나 더 나와요?,0,0.0,0.0,guide_0046,guide_0040|guide_0106|guide_0096|guide_0087|guide_0018
-Q004,bm25,형편이 어려운 사람한테 주는 혜택도 있어요?,0,0.0,0.0,guide_0044,guide_0052|guide_0045|guide_0116|guide_0091|guide_0104
-Q005,bm25,비싼 차는 지원을 덜 해준다고 들었는데 기준이 뭔가요?,0,0.0,0.0,guide_0037,guide_0090|guide_0087|guide_0081|guide_0096|guide_0020
-Q006,bm25,이사 온 지 얼마 안 됐는데 신청 가능한가요?,0,0.0,0.0,guide_0081,guide_0109|guide_0104|guide_0090|guide_0009|guide_0095
-Q007,bm25,예전에 한 번 받았는데 또 되나요?,1,1.0,1.0,guide_0020|guide_0090,guide_0020|guide_0090|guide_0104|guide_0064|guide_0009
-Q008,bm25,차를 두 대 한꺼번에 사면 둘 다 지원되나요?,1,0.3333,0.5,guide_0020|guide_0090,guide_0083|guide_0095|guide_0020|guide_0064|guide_0084
-Q009,bm25,타던 경유차 없애고 사면 더 주는 게 있다던데요,0,0.0,0.0,guide_0049,guide_0064|guide_0088|guide_0097|guide_0085|guide_0087
-Q010,bm25,영업용으로 손님 태우는 차는 우대해주나요?,0,0.0,0.0,guide_0042|guide_0086,guide_0050|guide_0074|guide_0081|guide_0079|guide_0091
-Q011,bm25,계약하고 나서 언제까지 차를 받아야 하나요?,0,0.0,0.0,guide_0083|guide_0087,guide_0048|guide_0020|guide_0023|guide_0116|guide_0047
-Q012,bm25,서류 내고 나면 돈은 언제 들어오나요?,0,0.0,0.0,guide_0089,guide_0054|guide_0058|guide_0090|guide_0047|guide_0032
-Q013,bm25,중간에 팔면 돈을 토해내야 하나요?,0,0.0,0.0,guide_0104|guide_0105,guide_0095|guide_0083|guide_0081|guide_0093|guide_0084
-Q014,bm25,수출하려고 말소하면 얼마나 반납해요?,1,1.0,1.0,guide_0104,guide_0104|guide_0107|guide_0119|guide_0095|guide_0018
-Q015,bm25,장사용 트럭 샀다가 금방 팔면 어떻게 되나요?,0,0.0,0.0,guide_0106,guide_0083|guide_0102|guide_0020|guide_0096|guide_0087
-Q016,bm25,신청은 어디에 넣는 건가요?,0,0.0,0.0,guide_0082,guide_0026|guide_0083|guide_0106|guide_0104|guide_0081
-Q017,bm25,누구를 먼저 뽑아주나요?,0,0.0,0.0,guide_0085,guide_0091|guide_0079|guide_0084|guide_0093|guide_0032
-Q018,bm25,배터리 보증이 길면 더 주는 것도 있어요?,1,1.0,1.0,guide_0043,guide_0043|guide_0087|guide_0096|guide_0048|guide_0088
-Q019,bm25,부부 공동으로 사면 누구 기준인가요?,1,1.0,1.0,guide_0081,guide_0081|guide_0026|guide_0095|guide_0083|guide_0023
-Q020,bm25,아주 작은 전기차는 얼마 나와요?,0,0.0,0.0,guide_0050,guide_0115|guide_0048|guide_0116|guide_0052|guide_0030
-Q021,bm25,렌터카 사업하는데 지원 받을 수 있나요?,0,0.0,0.0,guide_0047,guide_0000|guide_0093|guide_0084|guide_0106|guide_0035
-Q022,bm25,거짓으로 신청하면 어떻게 되나요?,0,0.0,0.0,guide_0034|guide_0108|guide_0109,guide_0081|guide_0095|guide_0102|guide_0083|guide_0084
-Q023,bm25,지방비는 지자체가 마음대로 정하나요?,0,0.0,0.0,guide_0038,guide_0106|guide_0080|guide_0062|guide_0039|guide_0042
-Q024,bm25,차 종류를 도중에 바꿔도 되나요?,0,0.0,0.0,guide_0088,guide_0050|guide_0062|guide_0039|guide_0074|guide_0064
-Q025,bm25,보조금 대상 차량인지 어디서 확인해요?,0,0.0,0.0,guide_0021,guide_0018|guide_0114|guide_0111|guide_0113|guide_0049
-Q026,bm25,20대 후반인데 차를 한 번도 안 사봤어요 혜택 있나요?,0,0.0,0.0,guide_0045,guide_0020|guide_0104|guide_0096|guide_0087|guide_0064
-Q027,bm25,중고로 나온 전기차를 사도 지원해주나요?,0,0.0,0.0,guide_0018,guide_0106|guide_0039|guide_0020|guide_0062|guide_0091
-Q028,bm25,누가 신청할 수 있는 건가요? 회사도 되나요?,0,0.0,0.0,guide_0018,guide_0055|guide_0106|guide_0083|guide_0116|guide_0084
-Q029,bm25,승용차는 최대 얼마까지 받을 수 있어요?,0,0.0,0.0,guide_0041,guide_0035|guide_0086|guide_0106|guide_0031|guide_0093
-Q030,bm25,택배 일 하는데 트럭 사면 더 챙겨주나요?,0,0.0,0.0,guide_0072|guide_0077,guide_0091|guide_0083|guide_0098|guide_0079|guide_0089
-Q031,bm25,농사짓는 사람도 우대가 있나요?,0,0.0,0.0,guide_0071|guide_0076,guide_0052|guide_0045|guide_0116|guide_0048|guide_0087
-Q032,bm25,작은 가게 하는데 화물차 사면 얼마나 더 받죠?,0,0.0,0.0,guide_0070|guide_0075,guide_0093|guide_0084|guide_0106|guide_0040|guide_0083
-Q033,bm25,1톤 트럭은 최대 얼마까지 나오나요?,1,0.2,1.0,guide_0068,guide_0065|guide_0058|guide_0041|guide_0054|guide_0068
-Q034,bm25,화물차도 비싸면 지원 안 되나요?,0,0.0,0.0,guide_0067,guide_0095|guide_0109|guide_0083|guide_0084|guide_0077
-Q035,bm25,경유 트럭 폐차하면 두 번 받을 수 있어요?,1,1.0,1.0,guide_0064,guide_0064|guide_0085|guide_0093|guide_0084|guide_0095
-Q036,bm25,버스는 얼마나 지원되나요?,0,0.0,0.0,guide_0054,guide_0083|guide_0056|guide_0059|guide_0084|guide_0038
-Q037,bm25,어린이집 통학버스도 지원 대상인가요?,1,0.5,1.0,guide_0058,guide_0007|guide_0058|guide_0120|guide_0059|guide_0018
-Q038,bm25,법인이 버스 여러 대 사도 제한이 없나요?,1,1.0,1.0,guide_0055,guide_0055|guide_0020|guide_0066|guide_0042|guide_0090
-Q039,bm25,아주 작은 화물차는 정액으로 준다던데 얼마예요?,1,1.0,1.0,guide_0074,guide_0074|guide_0063|guide_0062|guide_0040|guide_0050
-Q040,bm25,장애인이나 유공자도 우선해서 뽑아주나요?,1,1.0,1.0,guide_0085,guide_0085|guide_0086|guide_0091|guide_0116|guide_0020
-Q041,bm25,보조금 신청은 일 년에 몇 번 받나요?,0,0.0,0.0,guide_0079,guide_0106|guide_0081|guide_0098|guide_0104|guide_0083
-Q042,bm25,군대 가 있어서 거주기간을 못 채웠는데 방법 없을까요?,1,1.0,1.0,guide_0081,guide_0081|guide_0020|guide_0032|guide_0064|guide_0104
-Q043,bm25,차상위인데 애도 셋이면 둘 다 받나요?,0,0.0,0.0,guide_0040,guide_0051|guide_0075|guide_0044|guide_0084|guide_0070
-Q044,bm25,공항 안에서만 쓰는 차도 지원되나요?,1,1.0,1.0,guide_0019,guide_0019|guide_0039|guide_0062|guide_0048|guide_0073
-Q045,bm25,예전에 산 전기차가 오래됐는데 바꾸면 혜택 있어요?,0,0.0,0.0,guide_0048,guide_0083|guide_0064|guide_0020|guide_0095|guide_0093
-Q046,bm25,보조금 받은 차를 부모님께 물려줘도 되나요?,0,0.0,0.0,guide_0049|guide_0073,guide_0035|guide_0062|guide_0039|guide_0032|guide_0031
-Q047,bm25,나라에서 정한 물량이 지역마다 다른가요?,0,0.0,0.0,guide_0121,guide_0080|guide_0106|guide_0019|guide_0089|guide_0098
-Q048,bm25,신청했는데 순서가 밀리면 어떻게 되나요?,1,0.2,0.5,guide_0083|guide_0087,guide_0093|guide_0084|guide_0102|guide_0095|guide_0083
-Q049,bm25,차를 사면 언제까지 타야 하나요?,0,0.0,0.0,guide_0104,guide_0023|guide_0024|guide_0048|guide_0097|guide_0083
-Q050,bm25,보급사업 공고는 언제 어디에 올라오나요?,1,1.0,1.0,guide_0079,guide_0079|guide_0091|guide_0081|guide_0080|guide_0033
-Q001,hybrid,청년이 처음으로 차 사면 지원 더 해주나요?,1,0.5,1.0,guide_0045,guide_0052|guide_0045|guide_0020|guide_0094|guide_0085
-Q002,hybrid,만 나이 몇 살까지 청년으로 쳐주나요?,1,1.0,1.0,guide_0045|guide_0052,guide_0045|guide_0052|guide_0058|guide_0120|guide_0023
-Q003,hybrid,애가 셋인데 얼마나 더 나와요?,0,0.0,0.0,guide_0046,guide_0054|guide_0058|guide_0045|guide_0040|guide_0106
-Q004,hybrid,형편이 어려운 사람한테 주는 혜택도 있어요?,0,0.0,0.0,guide_0044,guide_0045|guide_0052|guide_0047|guide_0085|guide_0090
-Q005,hybrid,비싼 차는 지원을 덜 해준다고 들었는데 기준이 뭔가요?,0,0.0,0.0,guide_0037,guide_0090|guide_0020|guide_0041|guide_0065|guide_0087
-Q006,hybrid,이사 온 지 얼마 안 됐는데 신청 가능한가요?,1,0.5,1.0,guide_0081,guide_0083|guide_0081|guide_0109|guide_0089|guide_0104
-Q007,hybrid,예전에 한 번 받았는데 또 되나요?,1,1.0,1.0,guide_0020|guide_0090,guide_0090|guide_0020|guide_0064|guide_0106|guide_0049
-Q008,hybrid,차를 두 대 한꺼번에 사면 둘 다 지원되나요?,1,1.0,1.0,guide_0020|guide_0090,guide_0020|guide_0064|guide_0090|guide_0047|guide_0045
-Q009,hybrid,타던 경유차 없애고 사면 더 주는 게 있다던데요,0,0.0,0.0,guide_0049,guide_0064|guide_0085|guide_0097|guide_0090|guide_0088
-Q010,hybrid,영업용으로 손님 태우는 차는 우대해주나요?,0,0.0,0.0,guide_0042|guide_0086,guide_0081|guide_0020|guide_0094|guide_0097|guide_0050
-Q011,hybrid,계약하고 나서 언제까지 차를 받아야 하나요?,0,0.0,0.0,guide_0083|guide_0087,guide_0023|guide_0116|guide_0020|guide_0106|guide_0090
-Q012,hybrid,서류 내고 나면 돈은 언제 들어오나요?,1,0.2,1.0,guide_0089,guide_0092|guide_0024|guide_0082|guide_0027|guide_0089
-Q013,hybrid,중간에 팔면 돈을 토해내야 하나요?,0,0.0,0.0,guide_0104|guide_0105,guide_0106|guide_0049|guide_0095|guide_0073|guide_0083
-Q014,hybrid,수출하려고 말소하면 얼마나 반납해요?,1,1.0,1.0,guide_0104,guide_0104|guide_0107|guide_0106|guide_0073|guide_0049
-Q015,hybrid,장사용 트럭 샀다가 금방 팔면 어떻게 되나요?,0,0.0,0.0,guide_0106,guide_0020|guide_0064|guide_0007|guide_0058|guide_0083
-Q016,hybrid,신청은 어디에 넣는 건가요?,0,0.0,0.0,guide_0082,guide_0027|guide_0098|guide_0083|guide_0023|guide_0092
-Q017,hybrid,누구를 먼저 뽑아주나요?,1,0.25,1.0,guide_0085,guide_0094|guide_0069|guide_0022|guide_0085|guide_0091
-Q018,hybrid,배터리 보증이 길면 더 주는 것도 있어요?,1,1.0,1.0,guide_0043,guide_0043|guide_0048|guide_0037|guide_0022|guide_0087
-Q019,hybrid,부부 공동으로 사면 누구 기준인가요?,1,1.0,1.0,guide_0081,guide_0081|guide_0037|guide_0020|guide_0046|guide_0026
-Q020,hybrid,아주 작은 전기차는 얼마 나와요?,0,0.0,0.0,guide_0050,guide_0052|guide_0045|guide_0039|guide_0068|guide_0115
-Q021,hybrid,렌터카 사업하는데 지원 받을 수 있나요?,1,1.0,1.0,guide_0047,guide_0047|guide_0000|guide_0050|guide_0093|guide_0066
-Q022,hybrid,거짓으로 신청하면 어떻게 되나요?,0,0.0,0.0,guide_0034|guide_0108|guide_0109,guide_0081|guide_0098|guide_0083|guide_0032|guide_0116
-Q023,hybrid,지방비는 지자체가 마음대로 정하나요?,0,0.0,0.0,guide_0038,guide_0039|guide_0062|guide_0080|guide_0106|guide_0057
-Q024,hybrid,차 종류를 도중에 바꿔도 되나요?,0,0.0,0.0,guide_0088,guide_0049|guide_0064|guide_0073|guide_0062|guide_0045
-Q025,hybrid,보조금 대상 차량인지 어디서 확인해요?,0,0.0,0.0,guide_0021,guide_0018|guide_0114|guide_0097|guide_0019|guide_0083
-Q026,hybrid,20대 후반인데 차를 한 번도 안 사봤어요 혜택 있나요?,1,0.5,1.0,guide_0045,guide_0020|guide_0045|guide_0064|guide_0090|guide_0048
-Q027,hybrid,중고로 나온 전기차를 사도 지원해주나요?,0,0.0,0.0,guide_0018,guide_0020|guide_0064|guide_0090|guide_0045|guide_0052
-Q028,hybrid,누가 신청할 수 있는 건가요? 회사도 되나요?,0,0.0,0.0,guide_0018,guide_0083|guide_0116|guide_0092|guide_0055|guide_0010
-Q029,hybrid,승용차는 최대 얼마까지 받을 수 있어요?,0,0.0,0.0,guide_0041,guide_0068|guide_0065|guide_0114|guide_0058|guide_0035
-Q030,hybrid,택배 일 하는데 트럭 사면 더 챙겨주나요?,1,0.2,0.5,guide_0072|guide_0077,guide_0007|guide_0086|guide_0089|guide_0081|guide_0072
-Q031,hybrid,농사짓는 사람도 우대가 있나요?,1,0.25,1.0,guide_0071|guide_0076,guide_0045|guide_0052|guide_0047|guide_0071|guide_0076
-Q032,hybrid,작은 가게 하는데 화물차 사면 얼마나 더 받죠?,0,0.0,0.0,guide_0070|guide_0075,guide_0074|guide_0068|guide_0093|guide_0084|guide_0063
-Q033,hybrid,1톤 트럭은 최대 얼마까지 나오나요?,1,0.3333,1.0,guide_0068,guide_0065|guide_0058|guide_0068|guide_0041|guide_0054
-Q034,hybrid,화물차도 비싸면 지원 안 되나요?,0,0.0,0.0,guide_0067,guide_0065|guide_0074|guide_0072|guide_0063|guide_0062
-Q035,hybrid,경유 트럭 폐차하면 두 번 받을 수 있어요?,1,1.0,1.0,guide_0064,guide_0064|guide_0085|guide_0106|guide_0090|guide_0049
-Q036,hybrid,버스는 얼마나 지원되나요?,0,0.0,0.0,guide_0054,guide_0094|guide_0050|guide_0083|guide_0042|guide_0056
-Q037,hybrid,어린이집 통학버스도 지원 대상인가요?,1,1.0,1.0,guide_0058,guide_0058|guide_0007|guide_0059|guide_0094|guide_0011
-Q038,hybrid,법인이 버스 여러 대 사도 제한이 없나요?,1,0.2,1.0,guide_0055,guide_0020|guide_0090|guide_0066|guide_0042|guide_0055
-Q039,hybrid,아주 작은 화물차는 정액으로 준다던데 얼마예요?,1,1.0,1.0,guide_0074,guide_0074|guide_0063|guide_0050|guide_0062|guide_0068
-Q040,hybrid,장애인이나 유공자도 우선해서 뽑아주나요?,1,1.0,1.0,guide_0085,guide_0085|guide_0020|guide_0081|guide_0007|guide_0086
-Q041,hybrid,보조금 신청은 일 년에 몇 번 받나요?,0,0.0,0.0,guide_0079,guide_0098|guide_0083|guide_0081|guide_0020|guide_0089
-Q042,hybrid,군대 가 있어서 거주기간을 못 채웠는데 방법 없을까요?,1,1.0,1.0,guide_0081,guide_0081|guide_0020|guide_0064|guide_0047|guide_0104
-Q043,hybrid,차상위인데 애도 셋이면 둘 다 받나요?,0,0.0,0.0,guide_0040,guide_0051|guide_0044|guide_0075|guide_0070|guide_0090
-Q044,hybrid,공항 안에서만 쓰는 차도 지원되나요?,1,1.0,1.0,guide_0019,guide_0019|guide_0074|guide_0050|guide_0039|guide_0068
-Q045,hybrid,예전에 산 전기차가 오래됐는데 바꾸면 혜택 있어요?,0,0.0,0.0,guide_0048,guide_0064|guide_0020|guide_0083|guide_0049|guide_0085
-Q046,hybrid,보조금 받은 차를 부모님께 물려줘도 되나요?,0,0.0,0.0,guide_0049|guide_0073,guide_0106|guide_0090|guide_0097|guide_0085|guide_0035
-Q047,hybrid,나라에서 정한 물량이 지역마다 다른가요?,0,0.0,0.0,guide_0121,guide_0080|guide_0086|guide_0062|guide_0068|guide_0106
-Q048,hybrid,신청했는데 순서가 밀리면 어떻게 되나요?,1,1.0,0.5,guide_0083|guide_0087,guide_0083|guide_0081|guide_0093|guide_0089|guide_0084
-Q049,hybrid,차를 사면 언제까지 타야 하나요?,0,0.0,0.0,guide_0104,guide_0020|guide_0090|guide_0023|guide_0024|guide_0064
-Q050,hybrid,보급사업 공고는 언제 어디에 올라오나요?,1,1.0,1.0,guide_0079,guide_0079|guide_0091|guide_0023|guide_0080|guide_0024
+Q001,dense,청년이 처음으로 차 사면 지원 더 해주나요?,1,1.0,1.0,guide_0022,guide_0022|guide_0024|guide_0042|guide_0028|guide_0045
+Q002,dense,만 나이 몇 살까지 청년으로 쳐주나요?,1,1.0,1.0,guide_0022,guide_0022|guide_0028|guide_0004|guide_0026|guide_0024
+Q003,dense,애가 셋인데 얼마나 더 나와요?,1,0.5,1.0,guide_0022,guide_0026|guide_0022|guide_0032|guide_0018|guide_0024
+Q004,dense,형편이 어려운 사람한테 주는 혜택도 있어요?,1,0.5,1.0,guide_0022,guide_0042|guide_0022|guide_0033|guide_0032|guide_0026
+Q005,dense,비싼 차는 지원을 덜 해준다고 들었는데 기준이 뭔가요?,1,0.2,1.0,guide_0018,guide_0032|guide_0033|guide_0026|guide_0021|guide_0018
+Q006,dense,이사 온 지 얼마 안 됐는데 신청 가능한가요?,1,1.0,1.0,guide_0039,guide_0039|guide_0041|guide_0044|guide_0006|guide_0011
+Q007,dense,예전에 한 번 받았는데 또 되나요?,1,0.3333,0.5,guide_0009|guide_0045,guide_0031|guide_0022|guide_0045|guide_0023|guide_0026
+Q008,dense,차를 두 대 한꺼번에 사면 둘 다 지원되나요?,1,1.0,0.5,guide_0009|guide_0045,guide_0045|guide_0022|guide_0031|guide_0032|guide_0026
+Q009,dense,타던 경유차 없애고 사면 더 주는 게 있다던데요,0,0.0,0.0,guide_0023,guide_0031|guide_0042|guide_0045|guide_0022|guide_0021
+Q010,dense,영업용으로 손님 태우는 차는 우대해주나요?,1,0.5,0.5,guide_0021|guide_0042,guide_0050|guide_0042|guide_0039|guide_0010|guide_0009
+Q011,dense,계약하고 나서 언제까지 차를 받아야 하나요?,0,0.0,0.0,guide_0041|guide_0043,guide_0057|guide_0044|guide_0051|guide_0011|guide_0006
+Q012,dense,서류 내고 나면 돈은 언제 들어오나요?,1,1.0,1.0,guide_0044,guide_0044|guide_0051|guide_0006|guide_0011|guide_0064
+Q013,dense,중간에 팔면 돈을 토해내야 하나요?,0,0.0,0.0,guide_0056|guide_0057,guide_0023|guide_0026|guide_0032|guide_0031|guide_0022
+Q014,dense,수출하려고 말소하면 얼마나 반납해요?,1,1.0,1.0,guide_0056,guide_0056|guide_0061|guide_0057|guide_0043|guide_0049
+Q015,dense,장사용 트럭 샀다가 금방 팔면 어떻게 되나요?,0,0.0,0.0,guide_0057,guide_0031|guide_0037|guide_0028|guide_0034|guide_0045
+Q016,dense,신청은 어디에 넣는 건가요?,1,0.5,1.0,guide_0040,guide_0047|guide_0040|guide_0044|guide_0006|guide_0051
+Q017,dense,누구를 먼저 뽑아주나요?,1,1.0,1.0,guide_0042,guide_0042|guide_0041|guide_0048|guide_0006|guide_0022
+Q018,dense,배터리 보증이 길면 더 주는 것도 있어요?,1,1.0,1.0,guide_0021,guide_0021|guide_0023|guide_0010|guide_0022|guide_0044
+Q019,dense,부부 공동으로 사면 누구 기준인가요?,0,0.0,0.0,guide_0039,guide_0022|guide_0045|guide_0042|guide_0026|guide_0018
+Q020,dense,아주 작은 전기차는 얼마 나와요?,1,1.0,1.0,guide_0024,guide_0024|guide_0036|guide_0033|guide_0021|guide_0026
+Q021,dense,렌터카 사업하는데 지원 받을 수 있나요?,1,0.5,1.0,guide_0022,guide_0034|guide_0022|guide_0006|guide_0032|guide_0026
+Q022,dense,거짓으로 신청하면 어떻게 되나요?,0,0.0,0.0,guide_0016|guide_0059,guide_0044|guide_0015|guide_0061|guide_0006|guide_0047
+Q023,dense,지방비는 지자체가 마음대로 정하나요?,1,1.0,1.0,guide_0019,guide_0019|guide_0030|guide_0027|guide_0029|guide_0065
+Q024,dense,차 종류를 도중에 바꿔도 되나요?,0,0.0,0.0,guide_0043,guide_0050|guide_0035|guide_0023|guide_0045|guide_0031
+Q025,dense,보조금 대상 차량인지 어디서 확인해요?,0,0.0,0.0,guide_0010,guide_0041|guide_0009|guide_0048|guide_0044|guide_0042
+Q026,dense,20대 후반인데 차를 한 번도 안 사봤어요 혜택 있나요?,1,1.0,1.0,guide_0022,guide_0022|guide_0031|guide_0045|guide_0042|guide_0023
+Q027,dense,중고로 나온 전기차를 사도 지원해주나요?,0,0.0,0.0,guide_0009,guide_0031|guide_0023|guide_0022|guide_0042|guide_0024
+Q028,dense,누가 신청할 수 있는 건가요? 회사도 되나요?,0,0.0,0.0,guide_0009,guide_0006|guide_0047|guide_0048|guide_0040|guide_0004
+Q029,dense,승용차는 최대 얼마까지 받을 수 있어요?,0,0.0,0.0,guide_0021,guide_0026|guide_0028|guide_0022|guide_0045|guide_0031
+Q030,dense,택배 일 하는데 트럭 사면 더 챙겨주나요?,1,0.3333,1.0,guide_0034,guide_0037|guide_0021|guide_0034|guide_0004|guide_0031
+Q031,dense,농사짓는 사람도 우대가 있나요?,1,1.0,1.0,guide_0034,guide_0034|guide_0042|guide_0022|guide_0032|guide_0036
+Q032,dense,작은 가게 하는데 화물차 사면 얼마나 더 받죠?,1,0.5,1.0,guide_0034,guide_0036|guide_0034|guide_0024|guide_0031|guide_0033
+Q033,dense,1톤 트럭은 최대 얼마까지 나오나요?,1,0.2,1.0,guide_0033,guide_0021|guide_0032|guide_0026|guide_0028|guide_0033
+Q034,dense,화물차도 비싸면 지원 안 되나요?,1,0.2,1.0,guide_0033,guide_0032|guide_0031|guide_0036|guide_0037|guide_0033
+Q035,dense,경유 트럭 폐차하면 두 번 받을 수 있어요?,1,1.0,1.0,guide_0031,guide_0031|guide_0023|guide_0045|guide_0042|guide_0057
+Q036,dense,버스는 얼마나 지원되나요?,1,0.25,1.0,guide_0026,guide_0021|guide_0022|guide_0024|guide_0026|guide_0031
+Q037,dense,어린이집 통학버스도 지원 대상인가요?,1,1.0,1.0,guide_0028,guide_0028|guide_0004|guide_0029|guide_0022|guide_0021
+Q038,dense,법인이 버스 여러 대 사도 제한이 없나요?,1,0.3333,1.0,guide_0026,guide_0045|guide_0004|guide_0026|guide_0009|guide_0021
+Q039,dense,아주 작은 화물차는 정액으로 준다던데 얼마예요?,1,1.0,1.0,guide_0036,guide_0036|guide_0024|guide_0033|guide_0032|guide_0031
+Q040,dense,장애인이나 유공자도 우선해서 뽑아주나요?,1,1.0,1.0,guide_0042,guide_0042|guide_0022|guide_0004|guide_0031|guide_0045
+Q041,dense,보조금 신청은 일 년에 몇 번 받나요?,0,0.0,0.0,guide_0038,guide_0044|guide_0041|guide_0051|guide_0045|guide_0039
+Q042,dense,군대 가 있어서 거주기간을 못 채웠는데 방법 없을까요?,1,1.0,1.0,guide_0039,guide_0039|guide_0043|guide_0023|guide_0022|guide_0035
+Q043,dense,차상위인데 애도 셋이면 둘 다 받나요?,0,0.0,0.0,guide_0020,guide_0022|guide_0034|guide_0031|guide_0042|guide_0024
+Q044,dense,공항 안에서만 쓰는 차도 지원되나요?,0,0.0,0.0,guide_0009,guide_0034|guide_0036|guide_0037|guide_0031|guide_0024
+Q045,dense,예전에 산 전기차가 오래됐는데 바꾸면 혜택 있어요?,1,1.0,1.0,guide_0023,guide_0023|guide_0031|guide_0035|guide_0042|guide_0022
+Q046,dense,보조금 받은 차를 부모님께 물려줘도 되나요?,0,0.0,0.0,guide_0023,guide_0042|guide_0031|guide_0045|guide_0057|guide_0022
+Q047,dense,나라에서 정한 물량이 지역마다 다른가요?,0,0.0,0.0,guide_0065,guide_0032|guide_0026|guide_0030|guide_0019|guide_0033
+Q048,dense,신청했는데 순서가 밀리면 어떻게 되나요?,1,1.0,0.5,guide_0041|guide_0043,guide_0041|guide_0006|guide_0044|guide_0011|guide_0051
+Q049,dense,차를 사면 언제까지 타야 하나요?,1,0.25,1.0,guide_0056,guide_0045|guide_0044|guide_0022|guide_0056|guide_0004
+Q050,dense,보급사업 공고는 언제 어디에 올라오나요?,1,1.0,1.0,guide_0038,guide_0038|guide_0046|guide_0011|guide_0015|guide_0064
+Q001,bm25,청년이 처음으로 차 사면 지원 더 해주나요?,1,0.3333,1.0,guide_0022,guide_0041|guide_0024|guide_0022|guide_0048|guide_0019
+Q002,bm25,만 나이 몇 살까지 청년으로 쳐주나요?,1,0.5,1.0,guide_0022,guide_0024|guide_0022|guide_0011|guide_0019|guide_0023
+Q003,bm25,애가 셋인데 얼마나 더 나와요?,0,0.0,0.0,guide_0022,guide_0020|guide_0049|guide_0043|guide_0057|guide_0015
+Q004,bm25,형편이 어려운 사람한테 주는 혜택도 있어요?,1,1.0,1.0,guide_0022,guide_0022|guide_0056|guide_0024|guide_0046|guide_0061
+Q005,bm25,비싼 차는 지원을 덜 해준다고 들었는데 기준이 뭔가요?,0,0.0,0.0,guide_0018,guide_0045|guide_0043|guide_0056|guide_0038|guide_0039
+Q006,bm25,이사 온 지 얼마 안 됐는데 신청 가능한가요?,0,0.0,0.0,guide_0039,guide_0056|guide_0059|guide_0049|guide_0031|guide_0045
+Q007,bm25,예전에 한 번 받았는데 또 되나요?,1,1.0,1.0,guide_0009|guide_0045,guide_0009|guide_0048|guide_0045|guide_0056|guide_0031
+Q008,bm25,차를 두 대 한꺼번에 사면 둘 다 지원되나요?,1,0.25,0.5,guide_0009|guide_0045,guide_0041|guide_0049|guide_0048|guide_0009|guide_0031
+Q009,bm25,타던 경유차 없애고 사면 더 주는 게 있다던데요,0,0.0,0.0,guide_0023,guide_0031|guide_0043|guide_0049|guide_0050|guide_0041
+Q010,bm25,영업용으로 손님 태우는 차는 우대해주나요?,0,0.0,0.0,guide_0021|guide_0042,guide_0024|guide_0039|guide_0038|guide_0036|guide_0046
+Q011,bm25,계약하고 나서 언제까지 차를 받아야 하나요?,0,0.0,0.0,guide_0041|guide_0043,guide_0061|guide_0011|guide_0009|guide_0056|guide_0045
+Q012,bm25,서류 내고 나면 돈은 언제 들어오나요?,0,0.0,0.0,guide_0044,guide_0049|guide_0026|guide_0028|guide_0045|guide_0009
+Q013,bm25,중간에 팔면 돈을 토해내야 하나요?,1,0.25,0.5,guide_0056|guide_0057,guide_0041|guide_0048|guide_0039|guide_0057|guide_0021
+Q014,bm25,수출하려고 말소하면 얼마나 반납해요?,1,1.0,1.0,guide_0056,guide_0056|guide_0058|guide_0063|guide_0041|guide_0049
+Q015,bm25,장사용 트럭 샀다가 금방 팔면 어떻게 되나요?,0,0.0,0.0,guide_0057,guide_0049|guide_0041|guide_0005|guide_0009|guide_0031
+Q016,bm25,신청은 어디에 넣는 건가요?,0,0.0,0.0,guide_0040,guide_0056|guide_0039|guide_0057|guide_0059|guide_0041
+Q017,bm25,누구를 먼저 뽑아주나요?,0,0.0,0.0,guide_0042,guide_0046|guide_0038|guide_0048|guide_0041|guide_0023
+Q018,bm25,배터리 보증이 길면 더 주는 것도 있어요?,1,0.5,1.0,guide_0021,guide_0049|guide_0021|guide_0043|guide_0041|guide_0020
+Q019,bm25,부부 공동으로 사면 누구 기준인가요?,1,1.0,1.0,guide_0039,guide_0039|guide_0049|guide_0041|guide_0012|guide_0048
+Q020,bm25,아주 작은 전기차는 얼마 나와요?,0,0.0,0.0,guide_0024,guide_0061|guide_0016|guide_0055|guide_0035|guide_0057
+Q021,bm25,렌터카 사업하는데 지원 받을 수 있나요?,0,0.0,0.0,guide_0022,guide_0000|guide_0015|guide_0061|guide_0041|guide_0048
+Q022,bm25,거짓으로 신청하면 어떻게 되나요?,0,0.0,0.0,guide_0016|guide_0059,guide_0039|guide_0041|guide_0055|guide_0049|guide_0048
+Q023,bm25,지방비는 지자체가 마음대로 정하나요?,1,0.3333,1.0,guide_0019,guide_0057|guide_0030|guide_0019|guide_0038|guide_0056
+Q024,bm25,차 종류를 도중에 바꿔도 되나요?,0,0.0,0.0,guide_0043,guide_0024|guide_0036|guide_0030|guide_0019|guide_0031
+Q025,bm25,보조금 대상 차량인지 어디서 확인해요?,0,0.0,0.0,guide_0010,guide_0060|guide_0035|guide_0023|guide_0009|guide_0043
+Q026,bm25,20대 후반인데 차를 한 번도 안 사봤어요 혜택 있나요?,1,0.25,1.0,guide_0022,guide_0056|guide_0023|guide_0009|guide_0022|guide_0048
+Q027,bm25,중고로 나온 전기차를 사도 지원해주나요?,0,0.0,0.0,guide_0009,guide_0057|guide_0019|guide_0038|guide_0030|guide_0046
+Q028,bm25,누가 신청할 수 있는 건가요? 회사도 되나요?,0,0.0,0.0,guide_0009,guide_0026|guide_0049|guide_0041|guide_0057|guide_0061
+Q029,bm25,승용차는 최대 얼마까지 받을 수 있어요?,0,0.0,0.0,guide_0021,guide_0015|guide_0016|guide_0011|guide_0023|guide_0064
+Q030,bm25,택배 일 하는데 트럭 사면 더 챙겨주나요?,0,0.0,0.0,guide_0034,guide_0046|guide_0041|guide_0038|guide_0011|guide_0051
+Q031,bm25,농사짓는 사람도 우대가 있나요?,0,0.0,0.0,guide_0034,guide_0022|guide_0024|guide_0061|guide_0049|guide_0015
+Q032,bm25,작은 가게 하는데 화물차 사면 얼마나 더 받죠?,0,0.0,0.0,guide_0034,guide_0041|guide_0020|guide_0048|guide_0049|guide_0057
+Q033,bm25,1톤 트럭은 최대 얼마까지 나오나요?,1,0.2,1.0,guide_0033,guide_0032|guide_0028|guide_0026|guide_0011|guide_0033
+Q034,bm25,화물차도 비싸면 지원 안 되나요?,0,0.0,0.0,guide_0033,guide_0049|guide_0041|guide_0059|guide_0056|guide_0036
+Q035,bm25,경유 트럭 폐차하면 두 번 받을 수 있어요?,1,1.0,1.0,guide_0031,guide_0031|guide_0042|guide_0041|guide_0048|guide_0015
+Q036,bm25,버스는 얼마나 지원되나요?,0,0.0,0.0,guide_0026,guide_0041|guide_0048|guide_0059|guide_0043|guide_0009
+Q037,bm25,어린이집 통학버스도 지원 대상인가요?,1,0.5,1.0,guide_0028,guide_0004|guide_0028|guide_0009|guide_0064|guide_0044
+Q038,bm25,법인이 버스 여러 대 사도 제한이 없나요?,1,0.3333,1.0,guide_0026,guide_0009|guide_0039|guide_0026|guide_0019|guide_0030
+Q039,bm25,아주 작은 화물차는 정액으로 준다던데 얼마예요?,1,1.0,1.0,guide_0036,guide_0036|guide_0020|guide_0046|guide_0024|guide_0030
+Q040,bm25,장애인이나 유공자도 우선해서 뽑아주나요?,1,1.0,1.0,guide_0042,guide_0042|guide_0046|guide_0039|guide_0038|guide_0061
+Q041,bm25,보조금 신청은 일 년에 몇 번 받나요?,0,0.0,0.0,guide_0038,guide_0039|guide_0057|guide_0056|guide_0041|guide_0051
+Q042,bm25,군대 가 있어서 거주기간을 못 채웠는데 방법 없을까요?,1,1.0,1.0,guide_0039,guide_0039|guide_0056|guide_0015|guide_0009|guide_0061
+Q043,bm25,차상위인데 애도 셋이면 둘 다 받나요?,0,0.0,0.0,guide_0020,guide_0041|guide_0049|guide_0034|guide_0048|guide_0056
+Q044,bm25,공항 안에서만 쓰는 차도 지원되나요?,1,1.0,1.0,guide_0009,guide_0009|guide_0019|guide_0023|guide_0030|guide_0059
+Q045,bm25,예전에 산 전기차가 오래됐는데 바꾸면 혜택 있어요?,0,0.0,0.0,guide_0023,guide_0049|guide_0041|guide_0048|guide_0009|guide_0056
+Q046,bm25,보조금 받은 차를 부모님께 물려줘도 되나요?,0,0.0,0.0,guide_0023,guide_0030|guide_0019|guide_0016|guide_0057|guide_0056
+Q047,bm25,나라에서 정한 물량이 지역마다 다른가요?,0,0.0,0.0,guide_0065,guide_0038|guide_0057|guide_0044|guide_0051|guide_0021
+Q048,bm25,신청했는데 순서가 밀리면 어떻게 되나요?,1,1.0,0.5,guide_0041|guide_0043,guide_0041|guide_0049|guide_0048|guide_0056|guide_0055
+Q049,bm25,차를 사면 언제까지 타야 하나요?,0,0.0,0.0,guide_0056,guide_0011|guide_0041|guide_0064|guide_0012|guide_0050
+Q050,bm25,보급사업 공고는 언제 어디에 올라오나요?,1,1.0,1.0,guide_0038,guide_0038|guide_0039|guide_0011|guide_0046|guide_0015
+Q001,hybrid,청년이 처음으로 차 사면 지원 더 해주나요?,1,1.0,1.0,guide_0022,guide_0022|guide_0024|guide_0042|guide_0028|guide_0045
+Q002,hybrid,만 나이 몇 살까지 청년으로 쳐주나요?,1,1.0,1.0,guide_0022,guide_0022|guide_0028|guide_0004|guide_0026|guide_0024
+Q003,hybrid,애가 셋인데 얼마나 더 나와요?,1,0.5,1.0,guide_0022,guide_0026|guide_0022|guide_0032|guide_0018|guide_0024
+Q004,hybrid,형편이 어려운 사람한테 주는 혜택도 있어요?,1,0.5,1.0,guide_0022,guide_0042|guide_0022|guide_0033|guide_0032|guide_0026
+Q005,hybrid,비싼 차는 지원을 덜 해준다고 들었는데 기준이 뭔가요?,1,0.2,1.0,guide_0018,guide_0032|guide_0033|guide_0026|guide_0021|guide_0018
+Q006,hybrid,이사 온 지 얼마 안 됐는데 신청 가능한가요?,1,1.0,1.0,guide_0039,guide_0039|guide_0041|guide_0044|guide_0006|guide_0011
+Q007,hybrid,예전에 한 번 받았는데 또 되나요?,1,0.3333,0.5,guide_0009|guide_0045,guide_0031|guide_0022|guide_0045|guide_0023|guide_0026
+Q008,hybrid,차를 두 대 한꺼번에 사면 둘 다 지원되나요?,1,1.0,0.5,guide_0009|guide_0045,guide_0045|guide_0022|guide_0031|guide_0032|guide_0026
+Q009,hybrid,타던 경유차 없애고 사면 더 주는 게 있다던데요,0,0.0,0.0,guide_0023,guide_0031|guide_0042|guide_0045|guide_0022|guide_0021
+Q010,hybrid,영업용으로 손님 태우는 차는 우대해주나요?,1,0.5,0.5,guide_0021|guide_0042,guide_0050|guide_0042|guide_0039|guide_0010|guide_0009
+Q011,hybrid,계약하고 나서 언제까지 차를 받아야 하나요?,0,0.0,0.0,guide_0041|guide_0043,guide_0057|guide_0044|guide_0051|guide_0011|guide_0006
+Q012,hybrid,서류 내고 나면 돈은 언제 들어오나요?,1,1.0,1.0,guide_0044,guide_0044|guide_0051|guide_0006|guide_0011|guide_0064
+Q013,hybrid,중간에 팔면 돈을 토해내야 하나요?,0,0.0,0.0,guide_0056|guide_0057,guide_0023|guide_0026|guide_0032|guide_0031|guide_0022
+Q014,hybrid,수출하려고 말소하면 얼마나 반납해요?,1,1.0,1.0,guide_0056,guide_0056|guide_0061|guide_0057|guide_0043|guide_0049
+Q015,hybrid,장사용 트럭 샀다가 금방 팔면 어떻게 되나요?,0,0.0,0.0,guide_0057,guide_0031|guide_0037|guide_0028|guide_0034|guide_0045
+Q016,hybrid,신청은 어디에 넣는 건가요?,1,0.5,1.0,guide_0040,guide_0047|guide_0040|guide_0044|guide_0006|guide_0051
+Q017,hybrid,누구를 먼저 뽑아주나요?,1,1.0,1.0,guide_0042,guide_0042|guide_0041|guide_0048|guide_0006|guide_0022
+Q018,hybrid,배터리 보증이 길면 더 주는 것도 있어요?,1,1.0,1.0,guide_0021,guide_0021|guide_0023|guide_0010|guide_0022|guide_0044
+Q019,hybrid,부부 공동으로 사면 누구 기준인가요?,0,0.0,0.0,guide_0039,guide_0022|guide_0045|guide_0042|guide_0026|guide_0018
+Q020,hybrid,아주 작은 전기차는 얼마 나와요?,1,1.0,1.0,guide_0024,guide_0024|guide_0036|guide_0033|guide_0021|guide_0026
+Q021,hybrid,렌터카 사업하는데 지원 받을 수 있나요?,1,0.5,1.0,guide_0022,guide_0034|guide_0022|guide_0006|guide_0032|guide_0026
+Q022,hybrid,거짓으로 신청하면 어떻게 되나요?,0,0.0,0.0,guide_0016|guide_0059,guide_0044|guide_0015|guide_0061|guide_0006|guide_0047
+Q023,hybrid,지방비는 지자체가 마음대로 정하나요?,1,1.0,1.0,guide_0019,guide_0019|guide_0030|guide_0027|guide_0029|guide_0065
+Q024,hybrid,차 종류를 도중에 바꿔도 되나요?,0,0.0,0.0,guide_0043,guide_0050|guide_0035|guide_0023|guide_0045|guide_0031
+Q025,hybrid,보조금 대상 차량인지 어디서 확인해요?,0,0.0,0.0,guide_0010,guide_0041|guide_0009|guide_0048|guide_0044|guide_0042
+Q026,hybrid,20대 후반인데 차를 한 번도 안 사봤어요 혜택 있나요?,1,1.0,1.0,guide_0022,guide_0022|guide_0031|guide_0045|guide_0042|guide_0023
+Q027,hybrid,중고로 나온 전기차를 사도 지원해주나요?,0,0.0,0.0,guide_0009,guide_0031|guide_0023|guide_0022|guide_0042|guide_0024
+Q028,hybrid,누가 신청할 수 있는 건가요? 회사도 되나요?,0,0.0,0.0,guide_0009,guide_0006|guide_0047|guide_0048|guide_0040|guide_0004
+Q029,hybrid,승용차는 최대 얼마까지 받을 수 있어요?,0,0.0,0.0,guide_0021,guide_0026|guide_0028|guide_0022|guide_0045|guide_0031
+Q030,hybrid,택배 일 하는데 트럭 사면 더 챙겨주나요?,1,0.3333,1.0,guide_0034,guide_0037|guide_0021|guide_0034|guide_0004|guide_0031
+Q031,hybrid,농사짓는 사람도 우대가 있나요?,1,1.0,1.0,guide_0034,guide_0034|guide_0042|guide_0022|guide_0032|guide_0036
+Q032,hybrid,작은 가게 하는데 화물차 사면 얼마나 더 받죠?,1,0.5,1.0,guide_0034,guide_0036|guide_0034|guide_0024|guide_0031|guide_0033
+Q033,hybrid,1톤 트럭은 최대 얼마까지 나오나요?,1,0.2,1.0,guide_0033,guide_0021|guide_0032|guide_0026|guide_0028|guide_0033
+Q034,hybrid,화물차도 비싸면 지원 안 되나요?,1,0.2,1.0,guide_0033,guide_0032|guide_0031|guide_0036|guide_0037|guide_0033
+Q035,hybrid,경유 트럭 폐차하면 두 번 받을 수 있어요?,1,1.0,1.0,guide_0031,guide_0031|guide_0023|guide_0045|guide_0042|guide_0057
+Q036,hybrid,버스는 얼마나 지원되나요?,1,0.25,1.0,guide_0026,guide_0021|guide_0022|guide_0024|guide_0026|guide_0031
+Q037,hybrid,어린이집 통학버스도 지원 대상인가요?,1,1.0,1.0,guide_0028,guide_0028|guide_0004|guide_0029|guide_0022|guide_0021
+Q038,hybrid,법인이 버스 여러 대 사도 제한이 없나요?,1,0.3333,1.0,guide_0026,guide_0045|guide_0004|guide_0026|guide_0009|guide_0021
+Q039,hybrid,아주 작은 화물차는 정액으로 준다던데 얼마예요?,1,1.0,1.0,guide_0036,guide_0036|guide_0024|guide_0033|guide_0032|guide_0031
+Q040,hybrid,장애인이나 유공자도 우선해서 뽑아주나요?,1,1.0,1.0,guide_0042,guide_0042|guide_0022|guide_0004|guide_0031|guide_0045
+Q041,hybrid,보조금 신청은 일 년에 몇 번 받나요?,0,0.0,0.0,guide_0038,guide_0044|guide_0041|guide_0051|guide_0045|guide_0039
+Q042,hybrid,군대 가 있어서 거주기간을 못 채웠는데 방법 없을까요?,1,1.0,1.0,guide_0039,guide_0039|guide_0043|guide_0023|guide_0022|guide_0035
+Q043,hybrid,차상위인데 애도 셋이면 둘 다 받나요?,0,0.0,0.0,guide_0020,guide_0022|guide_0034|guide_0031|guide_0042|guide_0024
+Q044,hybrid,공항 안에서만 쓰는 차도 지원되나요?,0,0.0,0.0,guide_0009,guide_0034|guide_0036|guide_0037|guide_0031|guide_0024
+Q045,hybrid,예전에 산 전기차가 오래됐는데 바꾸면 혜택 있어요?,1,1.0,1.0,guide_0023,guide_0023|guide_0031|guide_0035|guide_0042|guide_0022
+Q046,hybrid,보조금 받은 차를 부모님께 물려줘도 되나요?,0,0.0,0.0,guide_0023,guide_0042|guide_0031|guide_0045|guide_0057|guide_0022
+Q047,hybrid,나라에서 정한 물량이 지역마다 다른가요?,0,0.0,0.0,guide_0065,guide_0032|guide_0026|guide_0030|guide_0019|guide_0033
+Q048,hybrid,신청했는데 순서가 밀리면 어떻게 되나요?,1,1.0,0.5,guide_0041|guide_0043,guide_0041|guide_0006|guide_0044|guide_0011|guide_0051
+Q049,hybrid,차를 사면 언제까지 타야 하나요?,1,0.25,1.0,guide_0056,guide_0045|guide_0044|guide_0022|guide_0056|guide_0004
+Q050,hybrid,보급사업 공고는 언제 어디에 올라오나요?,1,1.0,1.0,guide_0038,guide_0038|guide_0046|guide_0011|guide_0015|guide_0064

@@ -188,6 +188,54 @@ def chunk_document(lines):
     return chunks
 
 
+MIN_CHARS = 300      # 이보다 짧으면 같은 섹션의 다음 청크와 병합 시도
+MAX_CHARS = 900      # 병합 상한
+
+
+def merge_short_chunks(chunks):
+    """
+    같은 섹션 내 인접한 짧은 청크를 병합한다.
+
+    '○' 단위로만 자르면 한 조항이 지나치게 잘게 쪼개져
+    (중앙값 165자) 정답 정보가 여러 청크로 흩어진다.
+    같은 section 안에서 연속된 청크를 MAX_CHARS 까지 합쳐
+    검색 단위를 의미 단위에 가깝게 만든다.
+    """
+    merged, buf = [], None
+
+    def flush_buf():
+        if buf:
+            merged.append(buf)
+
+    for c in chunks:
+        if buf is None:
+            buf = dict(c)
+            continue
+
+        same_section = (
+            buf["metadata"]["section"] == c["metadata"]["section"]
+            and buf["metadata"]["part"] == c["metadata"]["part"]
+        )
+        # 헤더를 제외한 본문 길이로 판단
+        cur_body = buf["text"].split("\n", 1)[-1]
+        add_body = c["text"].split("\n", 1)[-1]
+
+        if (same_section and len(cur_body) < MIN_CHARS
+                and len(cur_body) + len(add_body) <= MAX_CHARS):
+            buf["text"] = buf["text"] + "\n" + add_body
+            continue
+
+        flush_buf()
+        buf = dict(c)
+
+    flush_buf()
+
+    # ID 재부여
+    for i, c in enumerate(merged):
+        c["id"] = f"guide_{i:04d}"
+    return merged
+
+
 def main():
     if not PDF_PATH.exists():
         raise FileNotFoundError(f"PDF를 찾을 수 없습니다: {PDF_PATH.resolve()}")
@@ -196,7 +244,10 @@ def main():
     print(f"추출된 라인 수: {len(lines)}")
 
     chunks = chunk_document(lines)
-    print(f"생성된 청크 수: {len(chunks)}")
+    print(f"1차 청크 수: {len(chunks)}")
+
+    chunks = merge_short_chunks(chunks)
+    print(f"병합 후 청크 수: {len(chunks)}")
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8") as f:
