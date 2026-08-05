@@ -142,6 +142,7 @@ async def chat(req: ChatRequest):
         need=result.get("need"),
         extra=result.get("extra"),
         entities=result.get("entities", {}),
+        llm_backend=result.get("llm_backend"),
         elapsed_ms=int((time.time() - t0) * 1000),
     )
 
@@ -191,10 +192,6 @@ async def compare(
         df = df[df["시도"] == sido]
         if df.empty:
             raise HTTPException(404, f"'{sido}' 지역 데이터가 없습니다.")
-
-    df = df.dropna(subset=["보조금(만원)"])
-    if df.empty:
-        raise HTTPException(404, f"'{model}' 에 대한 유효한 보조금 데이터가 없습니다.")
 
     # 지역별 최고 금액 1건씩
     idx = df.groupby(["시도", "시군구"])["보조금(만원)"].idxmax()
@@ -261,15 +258,20 @@ async def health():
         )
 
     from build_vectorstore import EMBED_MODEL
-    from rag_chain import LLM_MODEL
+    from rag_chain import LLM_MODEL, LLM_PROVIDER, UPSTAGE_MODEL
 
+    gen = getattr(p, "generator", None)
+    backend = gen.active if gen else "-"
     return HealthResponse(
         status="ok",
         llm_loaded=STATE["llm_ready"],
         chunks=len(p.retriever.chunks),
         subsidy_rows=len(p.lookup.df),
         embed_model=EMBED_MODEL,
-        llm_model=LLM_MODEL,
+        llm_model=UPSTAGE_MODEL if backend == "upstage" else LLM_MODEL,
+        llm_provider=LLM_PROVIDER,
+        llm_backend=backend,
+        fallback_reason=getattr(gen, "fallback_reason", None) if gen else None,
     )
 
 

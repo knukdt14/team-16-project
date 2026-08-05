@@ -18,7 +18,16 @@ backend/main.py 는 이 파일의 answer() 만 호출하면 된다.
     프론트에서 사이드바 필터값을 함께 보내면 그 값으로 보완된다.
 """
 
+import os
 import re
+from pathlib import Path
+
+# 프로젝트 루트의 .env 로드 (UPSTAGE_API_KEY 등)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+except ImportError:
+    pass   # python-dotenv 미설치 시 환경변수만 사용
 
 from lookup import SubsidyLookup, calc_extra, normalize
 from rag_chain import Generator, Retriever, build_prompt
@@ -200,6 +209,7 @@ class Pipeline:
 
         msgs = build_prompt(question, docs, lk if lk and lk["status"] == "ok" else None)
         result["answer"] = self.generator.generate(msgs)
+        result["llm_backend"] = self.generator.active
         return result
 
     # ------------------------------------------------------------ 되묻기 문구

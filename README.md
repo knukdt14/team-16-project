@@ -332,6 +332,17 @@ Codespaces는 1.5B, 로컬 시연은 3B를 사용합니다.
 
 ---
 
+### API 키 설정 (선택)
+
+Upstage Solar 를 사용하려면 키가 필요합니다.
+**키가 없어도 로컬 모델로 동작하므로 필수는 아닙니다.**
+
+1. https://console.upstage.ai 에서 무료 키 발급
+2. `.env.example` 을 `.env` 로 복사
+3. `UPSTAGE_API_KEY` 에 발급받은 키 입력
+
+`.env` 는 git 에 올리지 않습니다. 팀원은 각자 발급받아 사용하세요.
+
 ## 프로젝트 구조
 
 ```

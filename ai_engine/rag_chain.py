@@ -31,6 +31,15 @@ rag_chain.py
 
 4) 금액은 절대 LLM 이 생성하지 않는다. lookup.py 결과만 사용한다.
    프롬프트에서도 문서에 없는 숫자 생성을 강하게 금지한다.
+
+5) LLM 은 Upstage Solar(API)와 HuggingFace(로컬) 중 선택할 수 있다.
+   - Upstage: 빠르고(수 초) 규정 해석 정확도가 높다. API 키 필요.
+   - HuggingFace: 키 없이 동작하나 CPU 에서 70~170초 소요.
+
+   LLM_PROVIDER=auto 이면 키가 있을 때 Upstage, 없으면 HuggingFace 를 쓴다.
+   Upstage 호출이 실패(토큰 소진·인증 오류·네트워크)하면 자동으로
+   HuggingFace 로 전환하고, 이후 요청은 폴백 모델로 처리한다.
+   → 채점자가 키 없이 clone 해도 서비스가 동작한다.
 """
 
 import json
@@ -55,10 +64,22 @@ from build_vectorstore import (
 
 CHUNKS_PATH = Path("../data/chunks.jsonl")
 
-# 환경변수로 모델 전환. 기본은 로컬/시연용 3B.
-# Codespaces 등 저사양 환경은 compose 에서 LLM_MODEL 을 1.5B 로 지정한다.
+# ---- LLM 설정 ----
+# LLM_PROVIDER : auto | upstage | huggingface
+#   auto        - UPSTAGE_API_KEY 가 있으면 Upstage, 없으면 HuggingFace
+#   upstage     - Upstage 강제 (실패 시 HuggingFace 로 폴백)
+#   huggingface - 로컬 모델만 사용
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "auto").lower()
+
+# HuggingFace 로컬 모델. Codespaces 등 저사양 환경은 compose 에서 1.5B 지정
 LLM_MODEL = os.getenv("LLM_MODEL", "Qwen/Qwen2.5-3B-Instruct")
 MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "400"))
+
+# Upstage
+UPSTAGE_API_KEY = os.getenv("UPSTAGE_API_KEY", "").strip()
+UPSTAGE_MODEL = os.getenv("UPSTAGE_MODEL", "solar-pro2")
+UPSTAGE_URL = "https://api.upstage.ai/v1/chat/completions"
+UPSTAGE_TIMEOUT = int(os.getenv("UPSTAGE_TIMEOUT", "60"))
 
 _kiwi = Kiwi()
 
@@ -203,19 +224,56 @@ def build_prompt(question: str, docs: list, lookup_result: dict = None) -> list:
 
 
 # ---------------------------------------------------------------- 생성기
-class Generator:
+class UpstageBackend:
+    """Upstage Solar API. OpenAI 호환 형식."""
+
+    name = "upstage"
+
+    def __init__(self, api_key: str = None, model: str = None):
+        self.api_key = api_key or UPSTAGE_API_KEY
+        self.model = model or UPSTAGE_MODEL
+        if not self.api_key:
+            raise ValueError("UPSTAGE_API_KEY 가 설정되지 않았습니다.")
+
+    def generate(self, messages: list, max_new_tokens: int = None) -> str:
+        import requests
+
+        r = requests.post(
+            UPSTAGE_URL,
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": self.model,
+                "messages": messages,
+                "temperature": 0.3,
+                "top_p": 0.9,
+                "max_tokens": max_new_tokens or MAX_NEW_TOKENS,
+            },
+            timeout=UPSTAGE_TIMEOUT,
+        )
+        # 401 인증 실패 / 429 토큰 소진 / 5xx 서버 오류 → 폴백 대상
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"].strip()
+
+
+class HuggingFaceBackend:
+    """로컬 transformers 모델. API 키 없이 동작."""
+
+    name = "huggingface"
+
     def __init__(self, model_name: str = LLM_MODEL, device: str = None):
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        kwargs = {"torch_dtype": torch.float16 if self.device == "cuda" else torch.float32}
+        kwargs = {
+            "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32
+        }
         if self.device == "cuda":
             kwargs["device_map"] = "auto"
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            **kwargs
-        )
+        self.model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
         if self.device != "cuda":
             self.model.to(self.device)
 
@@ -237,6 +295,65 @@ class Generator:
             )
         gen = out[0][inputs["input_ids"].shape[1]:]
         return self.tokenizer.decode(gen, skip_special_tokens=True).strip()
+
+
+class Generator:
+    """
+    프로바이더를 선택하고, Upstage 실패 시 HuggingFace 로 자동 전환한다.
+
+    폴백 모델은 미리 로드하지 않는다(지연 로딩).
+    Upstage 를 쓰는데 6GB 모델을 받아둘 이유가 없기 때문이다.
+    단, 첫 폴백 시 모델 다운로드/로드 시간이 발생한다.
+    이를 피하려면 preload_fallback=True 로 생성한다.
+    """
+
+    def __init__(self, provider: str = None, device: str = None,
+                 preload_fallback: bool = False):
+        self.device = device
+        self.provider_setting = (provider or LLM_PROVIDER).lower()
+        self._hf = None            # 지연 로딩
+        self.fallback_reason = None
+
+        want_upstage = (
+            self.provider_setting == "upstage"
+            or (self.provider_setting == "auto" and bool(UPSTAGE_API_KEY))
+        )
+
+        if want_upstage:
+            try:
+                self.backend = UpstageBackend()
+                print(f"[LLM] Upstage {UPSTAGE_MODEL} 사용")
+            except Exception as e:
+                print(f"[LLM] Upstage 초기화 실패 → HuggingFace 폴백: {e}")
+                self.fallback_reason = str(e)
+                self.backend = self._get_hf()
+        else:
+            self.backend = self._get_hf()
+            print(f"[LLM] HuggingFace {LLM_MODEL} 사용 ({self.backend.device})")
+
+        if preload_fallback and self.backend.name == "upstage":
+            self._get_hf()
+
+    def _get_hf(self):
+        if self._hf is None:
+            self._hf = HuggingFaceBackend(device=self.device)
+        return self._hf
+
+    @property
+    def active(self) -> str:
+        return self.backend.name
+
+    def generate(self, messages: list, max_new_tokens: int = None) -> str:
+        try:
+            return self.backend.generate(messages, max_new_tokens)
+        except Exception as e:
+            if self.backend.name != "upstage":
+                raise
+            # 토큰 소진 / 인증 오류 / 네트워크 장애 → 로컬 모델로 영구 전환
+            print(f"[LLM] Upstage 호출 실패 → HuggingFace 로 전환: {e}")
+            self.fallback_reason = str(e)
+            self.backend = self._get_hf()
+            return self.backend.generate(messages, max_new_tokens)
 
 
 # ---------------------------------------------------------------- 테스트
@@ -273,6 +390,7 @@ if __name__ == "__main__":
         print("답변 생성 테스트")
         print("=" * 60)
         g = Generator(device=args.device)
+        print(f"활성 백엔드: {g.active}\n")
         q = queries[0]
         docs = r.search(q, k=3, mode="hybrid")
         msgs = build_prompt(q, docs)

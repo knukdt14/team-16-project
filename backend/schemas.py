@@ -63,6 +63,8 @@ class ChatResponse(BaseModel):
         None, description="추가지원금 계산 내역 (해당 시)")
     entities: dict[str, Any] = Field(
         default_factory=dict, description="질문에서 추출한 지역·모델·자격조건")
+    llm_backend: str | None = Field(
+        None, description="실제 사용된 LLM (upstage | huggingface)")
     elapsed_ms: int = 0
 
 
@@ -116,6 +118,9 @@ class HealthResponse(BaseModel):
     subsidy_rows: int
     embed_model: str
     llm_model: str
+    llm_provider: str = Field("-", description="설정값 (auto/upstage/huggingface)")
+    llm_backend: str = Field("-", description="실제 사용 중인 백엔드")
+    fallback_reason: str | None = Field(None, description="폴백이 발생한 경우 사유")
 
 
 class ErrorResponse(BaseModel):
