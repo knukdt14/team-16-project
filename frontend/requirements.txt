@@ -1,4 +1,0 @@
-streamlit
-requests
-pandas
-plotly                  # 지역 비교 차트

@@ -209,11 +209,15 @@ class Generator:
 
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        kwargs = {"torch_dtype": torch.float16 if self.device == "cuda" else torch.float32}
+        if self.device == "cuda":
+            kwargs["device_map"] = "auto"
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            dtype=torch.float16 if self.device == "cuda" else torch.bfloat16,
-            device_map=self.device,
+            **kwargs
         )
+        if self.device != "cuda":
+            self.model.to(self.device)
 
     def generate(self, messages: list, max_new_tokens: int = None) -> str:
         max_new_tokens = max_new_tokens or MAX_NEW_TOKENS
