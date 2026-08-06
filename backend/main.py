@@ -142,6 +142,7 @@ async def chat(req: ChatRequest):
         need=result.get("need"),
         extra=result.get("extra"),
         entities=result.get("entities", {}),
+        llm_backend=result.get("llm_backend"),
         elapsed_ms=int((time.time() - t0) * 1000),
     )
 
@@ -173,7 +174,7 @@ async def get_subsidy(
 async def compare(
     model: str = Query(..., description="비교할 차종", examples=["EV6"]),
     sido: str | None = Query(None, description="특정 시도로 한정", examples=["경기"]),
-    limit: int = Query(30, ge=1, le=200, description="반환 개수"),
+    limit: int = Query(30, ge=1, le=500, description="반환 개수"),
     order: str = Query("desc", pattern="^(asc|desc)$", description="총액 정렬"),
 ):
     """
@@ -187,10 +188,12 @@ async def compare(
         raise HTTPException(404, f"'{model}' 에 해당하는 차량을 찾지 못했습니다.")
 
     df = p.lookup.df[p.lookup.df["모델명"].isin(models)]
+    # 보조금/국비/지방비에 빈값(NaN)이 있으면 idxmax·int() 에서 500 이 나므로 제거
+    df = df.dropna(subset=["보조금(만원)", "국비(만원)", "지방비(만원)"])
     if sido:
         df = df[df["시도"] == sido]
-        if df.empty:
-            raise HTTPException(404, f"'{sido}' 지역 데이터가 없습니다.")
+    if df.empty:
+        return CompareResponse(model_query=model, matched_models=models, count=0, rows=[])
 
     # 지역별 최고 금액 1건씩
     idx = df.groupby(["시도", "시군구"])["보조금(만원)"].idxmax()
@@ -257,15 +260,20 @@ async def health():
         )
 
     from build_vectorstore import EMBED_MODEL
-    from rag_chain import LLM_MODEL
+    from rag_chain import LLM_MODEL, LLM_PROVIDER, UPSTAGE_MODEL
 
+    gen = getattr(p, "generator", None)
+    backend = gen.active if gen else "-"
     return HealthResponse(
         status="ok",
         llm_loaded=STATE["llm_ready"],
         chunks=len(p.retriever.chunks),
         subsidy_rows=len(p.lookup.df),
         embed_model=EMBED_MODEL,
-        llm_model=LLM_MODEL,
+        llm_model=UPSTAGE_MODEL if backend == "upstage" else LLM_MODEL,
+        llm_provider=LLM_PROVIDER,
+        llm_backend=backend,
+        fallback_reason=getattr(gen, "fallback_reason", None) if gen else None,
     )
 
 

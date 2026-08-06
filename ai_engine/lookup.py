@@ -52,8 +52,50 @@ MODEL_ALIASES = {
     "토레스": "토레스", "토레스evx": "토레스",
     # 기타
     "폴스타": "폴스타", "폴스타4": "폴스타4",
-    "아이오닉": "아이오닉",   # 모호 → 되묻기 유도
+    # 모호한 입력 → 되묻기 유도 (여러 모델이 매칭되어 need_trim 으로 빠짐)
+    "아이오닉": "아이오닉",
+    "ev": "ev",
+    "이브이": "ev",
 }
+
+# 제조사명 접두어. 모델 매칭 시 제거한다.
+# "기아 EV" 처럼 제조사명이 붙으면 모델명과 매칭되지 않아
+# 되묻기로 가지 못하고 엉뚱한 답변이 생성되는 문제가 있었다.
+# 긴 이름부터 검사해야 "현대"가 "현대자동차"를 가로채지 않는다.
+# 입력 표기 → CSV 제조사 컬럼 값
+BRAND_MAP = {
+    "기아": "기아",
+    "현대자동차": "현대자동차", "현대": "현대자동차", "제네시스": "현대자동차",
+    "테슬라코리아": "테슬라코리아", "테슬라": "테슬라코리아",
+    "케이지모빌리티": "케이지모빌리티", "kg모빌리티": "케이지모빌리티",
+    "kgm": "케이지모빌리티", "쌍용": "케이지모빌리티",
+    "메르세데스벤츠코리아": "메르세데스벤츠코리아",
+    "메르세데스벤츠": "메르세데스벤츠코리아", "벤츠": "메르세데스벤츠코리아",
+    "볼보자동차코리아": "볼보자동차코리아", "볼보": "볼보자동차코리아",
+    "비와이디코리아": "비와이디코리아", "비와이디": "비와이디코리아",
+    "byd": "비와이디코리아",
+    "폭스바겐그룹코리아": "폭스바겐그룹코리아", "폭스바겐": "폭스바겐그룹코리아",
+    "아우디": "폭스바겐그룹코리아",
+    "폴스타오토모티브코리아": "폴스타오토모티브코리아",
+    "bmw": "BMW", "미니": "BMW", "mini": "BMW",
+}
+# 긴 이름부터 검사해야 "현대"가 "현대자동차"를 가로채지 않는다
+BRAND_PREFIXES = sorted(BRAND_MAP, key=len, reverse=True)
+
+
+def strip_brand(norm: str):
+    """
+    정규화된 문자열에서 제조사명 접두어를 분리한다.
+      '기아ev'  → ('ev', '기아')
+      '현대코나' → ('코나', '현대자동차')
+      '기아'    → ('기아', None)   제조사만 있으면 그대로 두어 not_found 처리
+      'ev6'    → ('ev6', None)
+    """
+    for b in BRAND_PREFIXES:
+        if norm.startswith(b) and len(norm) > len(b):
+            return norm[len(b):], BRAND_MAP[b]
+    return norm, None
+
 
 # 시도 표기 흔들림 흡수
 SIDO_ALIASES = {
@@ -130,11 +172,27 @@ class SubsidyLookup:
 
     # ------------------------------------------------------------ 모델
     def resolve_model(self, text: str):
-        """'EV6' → 해당 키워드를 포함한 실제 모델명 목록"""
+        """'EV6' → 해당 키워드를 포함한 실제 모델명 목록. 완전 일치 트림이 존재하면 우선 적용."""
         if not text:
             return []
-        key = MODEL_ALIASES.get(normalize(text), normalize(text))
-        hit = self.df[self.df["_model_norm"].str.contains(key, na=False)]
+        norm_text, brand = strip_brand(normalize(text))
+
+        # 제조사가 지정되면 해당 제조사 차량으로 범위를 좁힌다
+        # ("기아 EV" 가 토레스 EVX, Niro EV 까지 잡는 것을 방지)
+        df = self.df if brand is None else self.df[self.df["제조사"] == brand]
+        if df.empty:
+            df = self.df
+
+        exact = df[df["_model_norm"] == norm_text]
+        if not exact.empty:
+            return sorted(exact["모델명"].unique())
+
+        key = MODEL_ALIASES.get(norm_text, norm_text)
+        exact_key = df[df["_model_norm"] == key]
+        if not exact_key.empty:
+            return sorted(exact_key["모델명"].unique())
+
+        hit = df[df["_model_norm"].str.contains(key, na=False)]
         return sorted(hit["모델명"].unique())
 
     # ------------------------------------------------------------ 조회

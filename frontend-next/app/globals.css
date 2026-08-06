@@ -120,6 +120,160 @@ body {
 .zoom-ctl button { width: 28px; height: 28px; border: 1px solid var(--border); background: #fff; border-radius: 8px; font-size: 15px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 .zoom-ctl button:hover { background: #f0f2f5; }
 
+/* 실제 시도 지도(react-simple-maps) */
+.map-inner { position: relative; width: 100%; height: 100%; transition: transform .5s ease; }
+.map-inner.tilt { transform: perspective(1300px) rotateX(42deg) scale(1.04); transform-origin: center 58%; }
+.mlabel { font-size: 8px; font-weight: 700; fill: #111827; paint-order: stroke; stroke: #fff; stroke-width: 2px; pointer-events: none; }
+.drill { position: absolute; top: 8px; right: 8px; width: 212px; max-height: 86%; background: #fff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.16); display: flex; flex-direction: column; overflow: hidden; z-index: 6; }
+.drill-h { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 9px 11px; font-size: 12px; font-weight: 700; border-bottom: 1px solid var(--border); }
+.drill-h button { border: 0; background: #f0f2f5; border-radius: 6px; width: 22px; height: 22px; cursor: pointer; font-size: 12px; }
+.drill-list { overflow-y: auto; padding: 4px 0; }
+.drill-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 12px; font-size: 12.5px; border-bottom: 1px solid #f3f4f6; }
+.drill-amt { text-align: right; display: flex; flex-direction: column; }
+.drill-amt b { color: var(--accent); }
+.drill-amt em { font-style: normal; font-size: 10px; color: var(--muted); }
+
+/* 보조금 티어 뱃지 */
+.tier { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; letter-spacing: .3px; }
+.t-plat { background: linear-gradient(90deg,#e5e7eb,#cbd5e1); color: #334155; }
+.t-gold { background: #fef3c7; color: #92400e; }
+.t-silver { background: #eef2f6; color: #475569; }
+.t-basic { background: #f3f4f6; color: #6b7280; }
+
+/* 테마 토글 */
+.theme-btn { margin-left: 10px; border: 1px solid var(--border); background: var(--card); border-radius: 20px; padding: 6px 12px; font-size: 12px; cursor: pointer; color: var(--text); transition: all .15s ease; }
+.theme-btn:hover { background: #f0f2f5; }
+
+/* 다크 테마 */
+.app.dark { --bg:#0f141c; --card:#161d29; --border:#26303f; --text:#e6eaf2; --muted:#8b95a7; --accent-weak:#0e2a22; background: var(--bg); min-height: 100vh; }
+.app.dark .msg.bot { background: #1f2836; color: #e6eaf2; }
+.app.dark .rcard, .app.dark .drill { background: #1f2836; }
+.app.dark .chk, .app.dark .chips button, .app.dark .inputbar input,
+.app.dark .toggle, .app.dark .inline-form input, .app.dark .inline-form select { background: #1f2836; color: #e6eaf2; }
+.app.dark .nav span.on { background: #1f2836; }
+.app.dark .theme-btn:hover, .app.dark .zoom-ctl button:hover { background: #263044; }
+.app.dark .t-silver, .app.dark .t-basic { background: #263044; color: #cbd5e1; }
+
+/* 비교함(장바구니) */
+.add-cart { margin-top: 9px; border: 1px solid var(--accent); background: var(--accent-weak); color: #065f46; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 9px; cursor: pointer; }
+.add-cart:hover { background: #d1fae5; }
+.cart-clear { border: 1px solid var(--border); background: var(--card); border-radius: 8px; padding: 5px 11px; font-size: 12px; cursor: pointer; color: var(--text); }
+.cart-grid { display: flex; gap: 12px; padding: 16px; overflow-x: auto; }
+.cart-card { position: relative; min-width: 172px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); }
+.cart-card.best { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-weak), var(--shadow); }
+.cart-best { font-size: 11px; font-weight: 800; color: var(--accent); margin-bottom: 2px; }
+.cart-x { position: absolute; top: 8px; right: 8px; border: 0; background: #f0f2f5; border-radius: 6px; width: 20px; height: 20px; cursor: pointer; font-size: 10px; }
+.cart-model { font-weight: 700; font-size: 13px; }
+.cart-region { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.cart-total { font-size: 26px; font-weight: 800; color: var(--accent); margin: 8px 0 4px; }
+.cart-total span { font-size: 12px; color: var(--muted); margin-left: 2px; }
+.cart-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.cart-link { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 700; }
+.cart-link:hover { text-decoration: underline; }
+.chk-all { border-color: var(--accent); font-weight: 700; color: #065f46; }
+.kpi-clk { cursor: pointer; }
+.kpi-on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-weak), var(--shadow); }
+.kpi-on small { color: var(--accent); }
+
+/* ===== 현대 스타일 레이아웃 + 화이트/그린 톤 ===== */
+:root { --accent: #10b981; --accent-weak: #ecfdf5; }
+body { background: #fff; }
+.app { background: #fff; }
+.topbar { border: 1px solid #eef0f3; box-shadow: none; padding: 16px 24px; }
+.brand { letter-spacing: 2px; font-weight: 800; }
+.brand b { color: var(--accent); }
+.nav span { font-size: 13px; letter-spacing: .2px; }
+.nav span.on { background: transparent; color: #0b1524; border-bottom: 2px solid var(--accent); border-radius: 0; padding: 0 2px 4px; }
+.pill { display: none; }
+
+.hero { margin-top: 16px; padding: 4px 2px; }
+.hero-kick { font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+.hero-h { font-size: 40px; font-weight: 800; letter-spacing: -1.4px; line-height: 1.12; margin: 12px 0 10px; }
+.hero-p { font-size: 15px; color: var(--muted); margin: 0; }
+.main { margin-top: 22px; }
+.card { border-color: #ececf0; }
+.card-h .t { font-size: 15px; letter-spacing: -.2px; }
+
+/* 그린 톤 통일 */
+.hbar-t i { background: linear-gradient(90deg, #34d399, #10b981); }
+.chk.on, .chk-all, .add-cart { color: #065f46; }
+.add-cart:hover { background: #d1fae5; }
+
+/* 플로팅 챗봇 (현대처럼 눌러서 열기) */
+.chat-fab { position: fixed; right: 22px; bottom: 22px; z-index: 81; width: 58px; height: 58px; border-radius: 50%; border: 0; background: var(--accent); color: #fff; font-size: 22px; cursor: pointer; box-shadow: 0 12px 30px rgba(16,185,129,.45); transition: transform .15s ease; }
+.chat-fab:hover { transform: scale(1.06); }
+.chat-dock { position: fixed; right: 22px; bottom: 90px; width: 390px; max-width: calc(100vw - 44px); z-index: 80; opacity: 0; transform: translateY(18px) scale(.98); pointer-events: none; transition: all .25s ease; }
+.chat-dock.open { opacity: 1; transform: none; pointer-events: auto; }
+.chat-dock .chat { height: 560px; max-height: calc(100vh - 130px); box-shadow: 0 24px 64px rgba(11,21,36,.3); }
+.chat-close { border: 0; background: #f0f2f5; border-radius: 6px; width: 22px; height: 22px; cursor: pointer; margin-left: 8px; font-size: 11px; }
+
+/* 투어 버튼 위치(챗봇 버튼과 안 겹치게 왼쪽) */
+.tour-help { right: auto; left: 22px; bottom: 22px; background: var(--accent); box-shadow: 0 8px 20px rgba(16,185,129,.45); }
+
+/* 지도 아래 안내문구 잘림 방지 */
+.map-stage { height: 470px; }
+.map-wrap { display: flex; flex-direction: column; }
+.map-inner { flex: 1; min-height: 0; height: auto; }
+.map-legend { flex-shrink: 0; white-space: normal; line-height: 1.45; padding: 10px 12px 4px; }
+
+/* ===== 메인(랜딩) 페이지 ===== */
+.lp { max-width: 1240px; margin: 0 auto; padding: 22px; color: #0b1524; }
+.lp-nav { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px 0; }
+.lp-navcta { text-decoration: none; font-size: 13px; font-weight: 700; color: #fff; background: var(--accent); padding: 9px 18px; border-radius: 24px; }
+.lp-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: center; padding: 60px 4px 44px; }
+.lp-kick { font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+.lp-h1 { font-size: 52px; line-height: 1.1; letter-spacing: -1.8px; font-weight: 800; margin: 14px 0 18px; }
+.lp-sub { font-size: 16px; color: var(--muted); line-height: 1.7; margin: 0 0 30px; }
+.lp-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.lp-cta { text-decoration: none; background: var(--accent); color: #fff; font-weight: 800; font-size: 15px; padding: 15px 28px; border-radius: 14px; box-shadow: 0 10px 26px rgba(16,185,129,.35); }
+.lp-ghost { text-decoration: none; color: #0b1524; font-weight: 700; font-size: 15px; padding: 15px 22px; border: 1px solid #d7dbe0; border-radius: 14px; }
+.lp-visual { background: #f4f6f8; border-radius: 24px; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.lp-car { font-size: 120px; }
+.lp-visual span { font-size: 13px; letter-spacing: 4px; color: #9ca3af; font-weight: 800; }
+.lp-feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 20px 4px 40px; border-top: 1px solid #eef0f3; }
+.lp-feat { border: 1px solid #ececf0; border-radius: 18px; padding: 24px; transition: box-shadow .2s ease, transform .2s ease; }
+.lp-feat:hover { box-shadow: 0 16px 40px rgba(11,21,36,.08); transform: translateY(-3px); }
+.lp-feat-ic { font-size: 30px; }
+.lp-feat-t { font-size: 17px; font-weight: 800; margin: 12px 0 6px; }
+.lp-feat-d { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.lp-foot { border-top: 1px solid #eef0f3; padding: 22px 4px; font-size: 12px; color: #9ca3af; }
+@media (max-width: 820px) { .lp-hero, .lp-feats { grid-template-columns: 1fr; } .lp-h1 { font-size: 38px; } }
+
+/* 차종 비교 막대 클릭 */
+.hbar-clk { cursor: pointer; border-radius: 8px; padding: 2px 4px; transition: background .12s; }
+.hbar-clk:hover { background: #f0f7f3; }
+
+/* 차량 상세 모달 */
+.cd-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.5); z-index: 120; display: grid; place-items: center; padding: 20px; }
+.cd { position: relative; width: 380px; max-width: 92vw; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 70px rgba(0,0,0,.35); }
+.cd-x { position: absolute; top: 12px; right: 12px; z-index: 2; border: 0; background: rgba(255,255,255,.85); border-radius: 8px; width: 28px; height: 28px; cursor: pointer; }
+.cd-img { height: 170px; background: #f4f6f8; display: grid; place-items: center; font-size: 84px; }
+.cd-body { padding: 20px; }
+.cd-model { font-size: 19px; font-weight: 800; }
+.cd-region { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.cd-total { font-size: 34px; font-weight: 800; color: var(--accent); margin: 10px 0 4px; letter-spacing: -1px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cd-total > span:not(.tier) { font-size: 13px; color: var(--muted); font-weight: 600; }
+.cd-sub { font-size: 12.5px; color: var(--muted); }
+.cd-actions { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+.cd-add { border: 0; background: var(--accent); color: #fff; font-weight: 700; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+.cd-link { font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; }
+
+/* 지도 위 최대 지원금 배지 */
+.map-amount { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 7; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 22px; box-shadow: 0 8px 22px rgba(16,185,129,.4); display: flex; gap: 8px; align-items: baseline; white-space: nowrap; max-width: 92%; }
+.map-amount b { font-size: 18px; }
+
+/* 온보딩 투어 */
+.tour-help { position: fixed; right: 18px; bottom: 18px; z-index: 90; width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--accent); color: #fff; font-size: 20px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,.45); }
+.tour-overlay { position: fixed; inset: 0; z-index: 100; }
+.tour-hole { position: fixed; border-radius: 12px; box-shadow: 0 0 0 9999px rgba(15,23,42,.6); border: 2px solid #fff; transition: all .3s ease; pointer-events: none; }
+.tour-tip { position: fixed; z-index: 101; width: 300px; background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 14px 44px rgba(0,0,0,.32); }
+.tour-title { font-weight: 800; font-size: 15px; margin-bottom: 6px; color: #111827; }
+.tour-text { font-size: 13px; color: #6b7280; line-height: 1.55; }
+.tour-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+.tour-count { font-size: 12px; color: #9ca3af; }
+.tour-skip { border: 0; background: transparent; color: #9ca3af; font-size: 13px; cursor: pointer; margin-right: 8px; }
+.tour-next { border: 0; background: var(--accent); color: #fff; font-weight: 700; padding: 7px 16px; border-radius: 9px; cursor: pointer; }
+
 /* 비교 뷰 */
 .inline-form { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
 .inline-form input, .inline-form select { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; font-size: 13px; outline: none; }
@@ -131,3 +285,16 @@ body {
 .hbar-t { background: #eef2f6; border-radius: 6px; height: 16px; overflow: hidden; }
 .hbar-t i { display: block; height: 100%; background: linear-gradient(90deg, #34d399, var(--accent)); border-radius: 6px; transition: width .5s ease; }
 .hbar-v { font-size: 12px; font-weight: 700; text-align: right; }
+
+/* 차종 체크박스 */
+.checks { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; }
+.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; cursor: pointer; user-select: none; background: #fff; transition: all .15s ease; }
+.chk.on { border-color: var(--accent); background: var(--accent-weak); color: #065f46; font-weight: 600; }
+.chk input { accent-color: var(--accent); }
+.checks.scrolly { max-height: 128px; overflow-y: auto; padding: 6px; border: 1px solid var(--border); border-radius: 10px; }
+
+/* 폴리싱 */
+.card { transition: box-shadow .2s ease; }
+.card:hover, .kpi:hover { box-shadow: 0 2px 4px rgba(17,24,39,.06), 0 16px 40px rgba(17,24,39,.09); }
+.brand .dot { box-shadow: 0 4px 10px rgba(16,185,129,.4); }
+.zoom-ctl button { transition: all .15s ease; }
