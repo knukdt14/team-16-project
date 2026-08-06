@@ -67,10 +67,19 @@ def main():
     p = Pipeline(load_llm=True, device=args.device)
     print("준비 완료\n")
 
+    from rag_chain import LLM_MODEL, UPSTAGE_MODEL
+    backend = p.generator.active if p.generator else "-"
+    model = UPSTAGE_MODEL if backend == "upstage" else LLM_MODEL
+
     lines = ["# LLM 답변 품질 점검", ""]
-    lines.append(f"실행: {time.strftime('%Y-%m-%d %H:%M')}")
+    lines.append(f"- 실행: {time.strftime('%Y-%m-%d %H:%M')}")
+    lines.append(f"- LLM: `{backend}` / `{model}`")
+    lines.append("")
+    lines.append("> VS Code 에서 `Ctrl+Shift+V` 로 미리보기하면 "
+                 "프론트에서 렌더링될 모습을 확인할 수 있습니다.")
     lines.append("")
 
+    stats = []
     for i, (q, region, model, point) in enumerate(CASES, 1):
         print("=" * 66)
         print(f"[{i}/{len(CASES)}] {q}")
@@ -95,7 +104,8 @@ def main():
             lines.append("")
         lines.append(f"- 추출: 지역 `{e['region']}` / 모델 `{e['model']}` / "
                      f"청년 `{e['youth_first']}` / 자녀 `{e['children']}`")
-        lines.append(f"- 상태: `{r['status']}` / {elapsed:.1f}초")
+        backend = r.get("llm_backend") or "-"
+        lines.append(f"- 상태: `{r['status']}` / {elapsed:.1f}초 / LLM `{backend}`")
 
         if r.get("subsidy"):
             s = r["subsidy"]
@@ -107,9 +117,10 @@ def main():
         lines.append("")
         lines.append("**답변**")
         lines.append("")
-        lines.append("```")
-        lines.append(r["answer"])
-        lines.append("```")
+        # 코드블록 대신 인용 블록으로 감싸 마크다운이 렌더링되게 한다.
+        # (VS Code 미리보기 Ctrl+Shift+V 로 프론트에서 보일 모습 확인 가능)
+        for ln in r["answer"].split("\n"):
+            lines.append(f"> {ln}" if ln.strip() else ">")
         lines.append("")
 
         if r["sources"]:
@@ -118,15 +129,34 @@ def main():
             lines.append(f"**검색된 근거**: {srcs}")
             lines.append("")
 
+        n_lines = len([x for x in r["answer"].split("\n") if x.strip()])
+        n_chars = len(r["answer"])
+        stats.append((n_lines, n_chars))
+        lines.append(f"**분량**: {n_lines}줄 / {n_chars}자")
+        lines.append("")
         lines.append("**판정**: <!-- OK / 환각 / 근거누락 / 장황 등 기재 -->")
         lines.append("")
         lines.append("---")
         lines.append("")
 
+    # 분량 요약 (형식 준수 여부 판단용)
+    lines.append("## 분량 요약")
+    lines.append("")
+    lines.append("| # | 질문 | 줄 | 자 |")
+    lines.append("|---|---|---|---|")
+    for i, (q, _, _, _) in enumerate(CASES, 1):
+        st = stats[i - 1]
+        lines.append(f"| {i} | {q[:24]} | {st[0]} | {st[1]} |")
+    lines.append("")
+    avg_l = sum(x[0] for x in stats) / len(stats)
+    avg_c = sum(x[1] for x in stats) / len(stats)
+    lines.append(f"평균 {avg_l:.1f}줄 / {avg_c:.0f}자")
+
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines), encoding="utf-8")
     print("=" * 66)
+    print(f"평균 분량: {avg_l:.1f}줄 / {avg_c:.0f}자")
     print(f"저장: {out.resolve()}")
 
 

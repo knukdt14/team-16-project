@@ -21,7 +21,10 @@ services:
       # LLM 프로바이더. 키가 없으면 자동으로 HuggingFace 로 동작한다.
       LLM_PROVIDER: ${LLM_PROVIDER:-auto}
       UPSTAGE_API_KEY: ${UPSTAGE_API_KEY:-}
-      UPSTAGE_MODEL: ${UPSTAGE_MODEL:-solar-pro2}
+      UPSTAGE_MODEL: ${UPSTAGE_MODEL:-solar-pro4}
+      UPSTAGE_REASONING: ${UPSTAGE_REASONING:-minimal}
+      UPSTAGE_MAX_TOKENS: ${UPSTAGE_MAX_TOKENS:-8000}
+      UPSTAGE_TIMEOUT: ${UPSTAGE_TIMEOUT:-120}
       # 폴백용 로컬 모델. 저사양 환경 기본값(1.5B)
       LLM_MODEL: ${LLM_MODEL:-Qwen/Qwen2.5-1.5B-Instruct}
       MAX_NEW_TOKENS: ${MAX_NEW_TOKENS:-300}
