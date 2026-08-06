@@ -296,36 +296,59 @@
         <div class="slide-number">01 / 04</div>
       </div>
       <div class="grid-2x2">
-        <div class="card-box symptom">
+
+        <!-- 1. 현상 (Symptom) - 1번 & 2번 사진 -->
+        <div class="card-box symptom" style="grid-column: span 2;">
           <div class="box-label">🚨 현상 (Symptom)</div>
-          <div class="box-content">
-            지도의 특정 시도(전북, 충남, 충북, 경북 등) 클릭 시 상세 보조금 데이터가 렌더링되지 않고 <b>'데이터 없음'</b>으로 표시됨.
+          <div class="box-content" style="margin-bottom: 12px;">
+            지도의 특정 시도(전북, 충남, 충북, 경북 등) 클릭 시 상세 보조금 데이터가 렌더링되지 않고 <b>'데이터 없음'</b>으로 표시되는 반면, 보조금이 1,000만원 미만인 지역(경남 등)은 정상 출력됨.
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 220px; text-align: center;">
+              <div style="font-size: 12px; font-weight: 700; color: #10b981; margin-bottom: 4px; background: rgba(16, 185, 129, 0.15); padding: 3px; border-radius: 4px;">
+                1번 사진: 경남 (977만원 - 1000만 미만 정상)
+              </div>
+              <img src="issue1_symptom1.png" alt="경남 정상 렌더링 예시" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="flex: 1; min-width: 220px; text-align: center;">
+              <div style="font-size: 12px; font-weight: 700; color: #ef4444; margin-bottom: 4px; background: rgba(239, 68, 68, 0.15); padding: 3px; border-radius: 4px;">
+                2번 사진: 경북 (1000만 이상 '데이터 없음' 에러)
+              </div>
+              <img src="issue1_symptom2.png" alt="경북 데이터 없음 에러 예시" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
           </div>
         </div>
 
+        <!-- 2. 원인 (Cause) - 3번 사진 -->
         <div class="card-box cause">
-          <div class="box-label">🔍 원인 (Root Cause)</div>
+          <div class="box-label">🔍 원인 예시 (3번 사진)</div>
           <div class="box-content">
-            보조금 1,000만원 이상 지역의 CSV 데이터에 <code>"1,351"</code>과 같이 천 단위 쉼표(,)가 포함된 문자열 존재. 백엔드 <code>int()</code> 형변환 시 <code>ValueError</code> 발생.
+            보조금 1,000만원 이상 데이터에 <code>1,028</code>과 같이 천 단위 쉼표(<code>,</code>)가 포함되어 백엔드 <code>int()</code> 변환 시 <code>ValueError</code> 발생.
+            <div style="margin-top: 10px; text-align: center;">
+              <img src="issue1_cause.png" alt="원인 CSV 쉼표 예시" style="width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);" />
+            </div>
           </div>
         </div>
 
-        <div class="card-box solution">
-          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+        <!-- 3. 해결 (Solution) - 4번 사진 -->
+        <div class="card-box solution" style="grid-column: span 1;">
+          <div class="box-label">🛠️ 해결 예시 (4번 사진)</div>
           <div class="box-content">
-            <ul>
-              <li>백엔드/AI 모델 로직은 그대로 유지한 채, 원본 CSV 데이터 전처리 스크립트 작성 및 실행.</li>
-              <li>수치 데이터 컬럼 내 쉼표(<code>,</code>)를 일괄 제거하여 파이썬 정수형(int)으로 즉시 변환되도록 안전한 데이터 파이프라인 형성.</li>
-            </ul>
+            데이터 전처리 스크립트를 작성하여 수치 컬럼 내 쉼표(<code>,</code>)를 일괄 제거해 <code>1028</code> 정수형으로 즉시 파싱 가능하도록 최적화.
+            <div style="margin-top: 10px; text-align: center;">
+              <img src="issue1_solution.png" alt="해결 CSV 쉼표 제거 예시" style="width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);" />
+            </div>
           </div>
         </div>
 
-        <div class="card-box result">
+        <!-- 4. 성과 (Result) -->
+        <div class="card-box result" style="grid-column: span 2;">
           <div class="box-label">💡 성과 (Result)</div>
           <div class="box-content">
             데이터 파싱 예외 완전 방어 및 전국 17개 지자체 보조금 지도 상세 렌더링 <b>100% 정상 구동 달성</b>.
           </div>
         </div>
+
       </div>
     </div>
 
