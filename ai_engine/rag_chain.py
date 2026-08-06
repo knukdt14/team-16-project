@@ -73,13 +73,28 @@ LLM_PROVIDER = os.getenv("LLM_PROVIDER", "auto").lower()
 
 # HuggingFace 로컬 모델. Codespaces 등 저사양 환경은 compose 에서 1.5B 지정
 LLM_MODEL = os.getenv("LLM_MODEL", "Qwen/Qwen2.5-3B-Instruct")
-MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "400"))
+MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "250"))
 
 # Upstage
 UPSTAGE_API_KEY = os.getenv("UPSTAGE_API_KEY", "").strip()
 UPSTAGE_MODEL = os.getenv("UPSTAGE_MODEL", "solar-pro2")
 UPSTAGE_URL = "https://api.upstage.ai/v1/chat/completions"
-UPSTAGE_TIMEOUT = int(os.getenv("UPSTAGE_TIMEOUT", "60"))
+UPSTAGE_TIMEOUT = int(os.getenv("UPSTAGE_TIMEOUT", "120"))
+
+# 추론(reasoning) 모델용 설정.
+# solar-pro4 같은 추론 모델은 생각 과정을 별도 토큰으로 소비하고
+# 답변은 content 에 담는다. max_tokens 가 작으면 추론에 다 쓰이고
+# content 가 None 으로 와서 응답이 비게 된다.
+#   minimal - 추론 최소화 (권장)
+#   high    - 추론 켬 (느리고 토큰 소모 큼)
+# 주의: minimal 이어도 모델이 내부 사고를 수행할 수 있다.
+UPSTAGE_REASONING = os.getenv("UPSTAGE_REASONING", "minimal")
+
+# 추론 모델은 사고 토큰을 먼저 소비하고 그 뒤에 답변(content)을 쓴다.
+# 이 값이 작으면 사고 도중 잘려 content 가 비고 폴백이 발생하므로
+# 넉넉히 잡아야 한다. (프롬프트에서 6줄 제한을 걸고 있어
+#  실제 답변 자체는 짧게 나온다)
+UPSTAGE_MAX_TOKENS = int(os.getenv("UPSTAGE_MAX_TOKENS", "8000"))
 
 _kiwi = Kiwi()
 
@@ -172,30 +187,55 @@ class Retriever:
 # ---------------------------------------------------------------- 프롬프트
 SYSTEM_PROMPT = """당신은 전기차 구매보조금 상담 도우미입니다.
 
-## 답변 규칙
+## 출력 형식 (반드시 지킬 것)
 
-1. 제공된 문서에 없는 내용은 절대 만들어내지 마세요.
-   없으면 "해당 정보는 확인되지 않습니다"라고 답하세요.
+**핵심 답변 한 줄**
 
-2. 아래 조회된 금액이 제시되면 그 값을 그대로 쓰세요.
-   항목 제목이나 머리말을 답변에 옮기지 말고 실제 숫자만 쓰세요.
+- 항목: 내용
+- 항목: 내용
 
-3. 질문에 대해서만 답하세요. 묻지 않은 다른 지원 조건(택시, 법인,
-   화물차 등)은 언급하지 마세요.
+(근거: 조항번호)
+
+규칙:
+- 첫 줄은 굵게 표시한 핵심 결론 한 줄. 문장 하나로 끝낼 것.
+- 불릿은 최대 3개. 조건·대상·금액 등 핵심만.
+- 마지막 줄은 근거 조항. 예) (근거: 4-1-2 중·대형, 소형)
+  "문서 1", "문서 1~4" 같은 내부 번호는 쓰지 말 것.
+  조항번호를 알 수 없거나 정보가 없으면 근거 줄 자체를 생략할 것.
+- 전체 6줄을 넘기지 말 것.
+- 인사말, 서론, "도움이 되셨길" 같은 맺음말을 쓰지 말 것.
+- 같은 내용을 두 번 쓰지 말 것.
+
+## 내용 규칙
+
+1. 제공된 문서에 없는 내용은 만들어내지 마세요.
+   없으면 핵심 답변 자리에 **해당 정보는 확인되지 않습니다** 라고 쓰세요.
+
+2. 조회된 금액이 제시되면 그 숫자를 그대로 쓰세요.
+   항목 제목이나 머리말을 답변에 옮기지 마세요.
+   조건부 지원금(전환지원금 등)을 기본 지원액에 합산해서
+   핵심 답변에 쓰지 마세요. 핵심 답변은 조건 없이 받는 금액으로 하고,
+   조건부 항목은 불릿에서 조건과 함께 안내하세요.
+
+3. 질문한 내용만 답하세요. 묻지 않은 다른 지원 조건
+   (택시, 법인, 화물차 등)은 쓰지 마세요.
 
 4. 문서에 여러 차종(승용/화물/승합) 규정이 섞여 있습니다.
-   질문이 어떤 차종인지 확인하고, 해당 차종 규정만 사용하세요.
+   질문에 해당하는 차종 규정만 사용하세요.
    차종이 불분명하면 전기승용차 기준으로 답하세요.
 
 5. 조건을 반대로 서술하지 마세요.
    "3개월 이상 거주해야 함" → "3개월 미만이면 신청 불가"
    "최초 1대만 지원" → "2대째는 지원 불가"
-   문서 문장을 그대로 옮기기 어렵다면 문서 표현을 인용하세요.
 
-6. 답변 끝에 근거 조항을 표기하세요. 예: (근거: 4-1-2 중·대형, 소형)
+## 예시
 
-7. 3~4문장으로 간결하게 답하고, 마지막에 관할 지자체 공고 확인을
-   안내하세요."""
+**국비 지원액의 20%가 추가 지원됩니다**
+
+- 대상: 만 19~34세 청년
+- 조건: 생애 첫 자동차로 전기차 구매
+
+(근거: 4-1-2 중·대형, 소형)"""
 
 
 def build_prompt(question: str, docs: list, lookup_result: dict = None) -> list:
@@ -205,15 +245,21 @@ def build_prompt(question: str, docs: list, lookup_result: dict = None) -> list:
     parts = [f"## 참고 문서\n\n{ctx}"]
 
     if lookup_result and lookup_result.get("status") == "ok":
-        # 항목명을 LLM 이 그대로 복사하지 않도록 자연어 문장으로 제공
+        # 항목명을 LLM 이 그대로 복사하지 않도록 자연어 문장으로 제공.
+        # 기본 지원액과 조건부 전환지원금을 분리해 제시한다.
+        # (합산해서 주면 조건 없이 받는 금액처럼 답변하는 문제가 있었음)
+        conv = (lookup_result["전환지원금국비"]
+                + lookup_result["전환지원금지방비"])
         parts.append(
             "아래 금액은 데이터베이스에서 조회한 확정 값입니다. 그대로 사용하세요.\n"
-            f"{lookup_result['시군구']}에서 {lookup_result['모델명']} 구매 시 "
-            f"국비 {lookup_result['국비']}만원과 지방비 {lookup_result['지방비']}만원을 "
-            f"합쳐 총 {lookup_result['총액']}만원입니다. "
-            f"노후 내연기관차를 교체하는 경우 전환지원금 "
-            f"{lookup_result['전환지원금국비'] + lookup_result['전환지원금지방비']}만원이 "
-            f"별도로 추가됩니다."
+            f"기본 지원액: {lookup_result['시군구']} / {lookup_result['모델명']} 은 "
+            f"국비 {lookup_result['국비']}만원 + 지방비 {lookup_result['지방비']}만원 "
+            f"= 총 {lookup_result['총액']}만원. 누구나 받는 금액입니다.\n"
+            f"조건부 추가: 3년 이상 보유한 내연기관차를 폐차·판매하고 구매하는 "
+            f"경우에만 전환지원금 {conv}만원이 더해집니다. "
+            f"해당하지 않으면 {lookup_result['총액']}만원입니다.\n"
+            f"→ 핵심 답변에는 {lookup_result['총액']}만원을 쓰고, "
+            f"전환지원금은 불릿에서 조건과 함께 안내하세요."
         )
 
     parts.append(f"## 질문\n\n{question}")
@@ -225,7 +271,17 @@ def build_prompt(question: str, docs: list, lookup_result: dict = None) -> list:
 
 # ---------------------------------------------------------------- 생성기
 class UpstageBackend:
-    """Upstage Solar API. OpenAI 호환 형식."""
+    """
+    Upstage Solar API. OpenAI 호환 형식.
+
+    추론 모델(solar-pro4 등) 대응:
+      - reasoning_effort 파라미터 전달
+      - max_tokens 를 넉넉히 잡아 content 가 비는 것을 방지
+      - content 가 비면 명시적 에러를 던져 폴백 유도
+        (reasoning 필드는 모델의 내부 사고 과정이므로 사용자에게
+         노출하지 않는다. 과거 이를 대체 출력으로 사용했더니
+         "Thinking Process: ..." 영문 사고가 그대로 답변에 나왔다)
+    """
 
     name = "upstage"
 
@@ -234,8 +290,23 @@ class UpstageBackend:
         self.model = model or UPSTAGE_MODEL
         if not self.api_key:
             raise ValueError("UPSTAGE_API_KEY 가 설정되지 않았습니다.")
+        # 일부 파라미터를 거부하는 모델이 있어 실패 시 제거하고 재시도한다
+        self._minimal_params = False
 
-    def generate(self, messages: list, max_new_tokens: int = None) -> str:
+    def _payload(self, messages, max_tokens):
+        body = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+        }
+        if not self._minimal_params:
+            body["temperature"] = 0.3
+            body["top_p"] = 0.9
+            if UPSTAGE_REASONING:
+                body["reasoning_effort"] = UPSTAGE_REASONING
+        return body
+
+    def _call(self, messages, max_tokens):
         import requests
 
         r = requests.post(
@@ -244,18 +315,45 @@ class UpstageBackend:
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
             },
-            json={
-                "model": self.model,
-                "messages": messages,
-                "temperature": 0.3,
-                "top_p": 0.9,
-                "max_tokens": max_new_tokens or MAX_NEW_TOKENS,
-            },
+            json=self._payload(messages, max_tokens),
             timeout=UPSTAGE_TIMEOUT,
         )
-        # 401 인증 실패 / 429 토큰 소진 / 5xx 서버 오류 → 폴백 대상
-        r.raise_for_status()
-        return r.json()["choices"][0]["message"]["content"].strip()
+        if r.status_code == 400 and not self._minimal_params:
+            # temperature/top_p/reasoning_effort 미지원 모델 → 제거하고 1회 재시도
+            print(f"[LLM] 400 응답. 선택 파라미터를 제거하고 재시도합니다. "
+                  f"({r.text[:200]})")
+            self._minimal_params = True
+            return self._call(messages, max_tokens)
+
+        r.raise_for_status()   # 401 인증 / 429 소진 / 5xx → 폴백 대상
+        return r.json()
+
+    def generate(self, messages: list, max_new_tokens: int = None) -> str:
+        # 추론 모델은 생각 토큰을 별도로 쓰므로 상한을 크게 잡는다
+        budget = max(max_new_tokens or MAX_NEW_TOKENS, UPSTAGE_MAX_TOKENS)
+        data = self._call(messages, budget)
+
+        try:
+            msg = data["choices"][0]["message"]
+        except (KeyError, IndexError) as e:
+            raise RuntimeError(f"Upstage 응답 형식이 예상과 다릅니다: {data}") from e
+
+        content = (msg.get("content") or "").strip()
+        if content:
+            return content
+
+        # content 가 비었을 때: 사고 토큰이 상한을 소진한 경우가 대부분이다.
+        # reasoning 은 내부 사고 과정이므로 답변으로 쓰지 않는다.
+        finish = data["choices"][0].get("finish_reason")
+        usage = data.get("usage", {})
+
+        raise RuntimeError(
+            f"Upstage 응답이 비었습니다 "
+            f"(finish_reason={finish}, usage={usage}). "
+            f"사고 토큰이 한도를 소진했을 수 있습니다. "
+            f"UPSTAGE_MAX_TOKENS 를 늘리거나(현재 {UPSTAGE_MAX_TOKENS}) "
+            f"추론을 쓰지 않는 모델(solar-pro2)로 바꾸세요."
+        )
 
 
 class HuggingFaceBackend:
