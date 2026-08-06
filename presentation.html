@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전기차 보조금 웹 서비스 - 트러블슈팅 발표자료</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Pretendard:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: rgba(23, 31, 51, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-green: #10b981;
+      --accent-green-glow: rgba(16, 185, 129, 0.25);
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    .background-glow {
+      position: fixed;
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .background-glow-right {
+      position: fixed;
+      bottom: -10%;
+      right: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--accent-green-glow);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      font-weight: 700;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 38px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--accent-green);
+      color: #000;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 15px var(--accent-green-glow);
+    }
+
+    .slide {
+      display: none;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    .slide-title {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .card-box {
+      background: rgba(10, 15, 26, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .card-box.symptom { border-left: 4px solid #ef4444; }
+    .card-box.cause { border-left: 4px solid #f59e0b; }
+    .card-box.solution { border-left: 4px solid var(--accent-green); grid-column: span 2; }
+    .card-box.result { border-left: 4px solid var(--accent-purple); grid-column: span 2; }
+
+    .box-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .symptom .box-label { color: #f87171; }
+    .cause .box-label { color: #fbbf24; }
+    .solution .box-label { color: #34d399; }
+    .result .box-label { color: #a78bfa; }
+
+    .box-content {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #d1d5db;
+    }
+
+    .box-content ul {
+      list-style-type: none;
+    }
+
+    .box-content ul li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 6px;
+    }
+
+    .box-content ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-green);
+    }
+
+    code {
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #60a5fa;
+    }
+
+    .footer-nav {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .prev-next-btn {
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .prev-next-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    @media (max-width: 768px) {
+      .grid-2x2 {
+        grid-template-columns: 1fr;
+      }
+      .card-box.solution, .card-box.result {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-glow"></div>
+  <div class="background-glow-right"></div>
+
+  <div class="container">
+    <header>
+      <div class="badge">TROUBLESHOOTING REPORT</div>
+      <h1>전기차 보조금 웹 서비스 트러블슈팅</h1>
+      <p>실무 개발 과정에서 해결한 핵심 3가지 테크니컬 이슈 발표 자료</p>
+    </header>
+
+    <div class="nav-controls">
+      <button class="nav-btn active" onclick="showSlide(0)">ISSUE 01</button>
+      <button class="nav-btn" onclick="showSlide(1)">ISSUE 02</button>
+      <button class="nav-btn" onclick="showSlide(2)">ISSUE 03</button>
+      <button class="nav-btn" onclick="showSlide(3)">SUMMARY</button>
+    </div>
+
+    <!-- SLIDE 1 -->
+    <div class="slide active">
+      <div class="slide-header">
+        <div class="slide-title">
+          <span>🚨 ISSUE 01. 수치 데이터 쉼표(,) 포맷으로 인한 500 Server Error</span>
+        </div>
+        <div class="slide-number">01 / 04</div>
+      </div>
+      <div class="grid-2x2">
+        <div class="card-box symptom">
+          <div class="box-label">🚨 현상 (Symptom)</div>
+          <div class="box-content">
+            지도의 특정 시도(전북, 충남, 충북, 경북 등) 클릭 시 상세 보조금 데이터가 렌더링되지 않고 <b>'데이터 없음'</b>으로 표시됨.
+          </div>
+        </div>
+
+        <div class="card-box cause">
+          <div class="box-label">🔍 원인 (Root Cause)</div>
+          <div class="box-content">
+            보조금 1,000만원 이상 지역의 CSV 데이터에 <code>"1,351"</code>과 같이 천 단위 쉼표(,)가 포함된 문자열 존재. 백엔드 <code>int()</code> 형변환 시 <code>ValueError</code> 발생.
+          </div>
+        </div>
+
+        <div class="card-box solution">
+          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+          <div class="box-content">
+            <ul>
+              <li>백엔드/AI 모델 로직은 그대로 유지한 채, 원본 CSV 데이터 전처리 스크립트 작성 및 실행.</li>
+              <li>수치 데이터 컬럼 내 쉼표(<code>,</code>)를 일괄 제거하여 파이썬 정수형(int)으로 즉시 변환되도록 안전한 데이터 파이프라인 형성.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-box result">
+          <div class="box-label">💡 성과 (Result)</div>
+          <div class="box-content">
+            데이터 파싱 예외 완전 방어 및 전국 17개 지자체 보조금 지도 상세 렌더링 <b>100% 정상 구동 달성</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-title">
+          <span>🧠 ISSUE 02. AI 챗봇 대화 세션 맥락(Context) 유실 및 지역 무한 되묻기</span>
+        </div>
+        <div class="slide-number">02 / 04</div>
+      </div>
+      <div class="grid-2x2">
+        <div class="card-box symptom">
+          <div class="box-label">🚨 현상 (Symptom)</div>
+          <div class="box-content">
+            "부산 얼마야?" 대화 후 사용자가 차량명("EV6")이나 트림만 입력 시, 이전 지역("부산")을 기억하지 못하고 다시 지역을 되묻는 현상.
+          </div>
+        </div>
+
+        <div class="card-box cause">
+          <div class="box-label">🔍 원인 (Root Cause)</div>
+          <div class="box-content">
+            단발성 API 호출 구조로 인해 대화 엔티티(지역, 차종)가 세션 단위로 보존되지 않고 새 메시지 전송 시 <code>null</code>로 초기화되어 백엔드로 전달됨.
+          </div>
+        </div>
+
+        <div class="card-box solution">
+          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+          <div class="box-content">
+            <ul>
+              <li>프론트엔드(<code>Chatbot.jsx</code>) 내 <code>useRef</code> 기반 대화 맥락 객체(<code>ctx.current = { region, model }</code>) 구축.</li>
+              <li>지도 클릭 및 되묻기 옵션 선택 시 이전 지역/차종을 메모리에 누적 보존하여 백엔드 전송 시 함께 누적 전달하도록 상태 관리 개편.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-box result">
+          <div class="box-label">💡 성과 (Result)</div>
+          <div class="box-content">
+            이전 대화 맥락을 완벽히 기억하는 자연스러운 <b>멀티턴(Multi-turn) 대화 흐름 및 사용자 경험(UX) 완성</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-title">
+          <span>📝 ISSUE 03. 챗봇 답변 텍스트 개행(\n) 및 파서 렌더링 미반영</span>
+        </div>
+        <div class="slide-number">03 / 04</div>
+      </div>
+      <div class="grid-2x2">
+        <div class="card-box symptom">
+          <div class="box-label">🚨 현상 (Symptom)</div>
+          <div class="box-content">
+            LLM 및 백엔드에서 개행 문자(<code>\n</code>)를 포함하여 응답을 반환해도 챗봇 대화창에서 줄바꿈이 무시되고 텍스트가 한 줄로 빽빽하게 렌더링됨.
+          </div>
+        </div>
+
+        <div class="card-box cause">
+          <div class="box-label">🔍 원인 (Root Cause)</div>
+          <div class="box-content">
+            React 기본 JSX 렌더링 시 <code>\n</code> 문자가 일반 공백 처리되며, 기존 커스텀 텍스트 파서(Bold 파서) 내에 줄바꿈 요소(<code>&lt;br /&gt;</code>) 변환 처리 미비.
+          </div>
+        </div>
+
+        <div class="card-box solution">
+          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+          <div class="box-content">
+            <ul>
+              <li><code>renderAnswer</code> 파싱 도우미 함수 설계: 텍스트를 <code>\n</code> 단위로 split 후 개행(<code>&lt;br /&gt;</code>) 노드로 전환.</li>
+              <li>기존 <code>**강조(Bold)**</code> 마크업 파서 정규식과 통합하여 단락과 강조 텍스트가 동시에 정상 적용되도록 고도화.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-box result">
+          <div class="box-label">💡 성과 (Result)</div>
+          <div class="box-content">
+            규정/근거 등 복잡하고 긴 답변 텍스트의 <b>가독성 및 UI 문단 구획 완성도 극대화</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 SUMMARY -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-title">
+          <span>✨ SUMMARY. 트러블슈팅 총평 및 핵심 성과</span>
+        </div>
+        <div class="slide-number">04 / 04</div>
+      </div>
+      <div class="grid-2x2">
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label" style="font-size: 16px;">1. 데이터 파이프라인 무결성 확보 (Data Integrity)</div>
+          <div class="box-content">
+            공공데이터의 예외적 수치 포맷(천 단위 쉼표 등)을 사전 전처리하여 백엔드 파싱 예외 500 에러를 100% 방어함.
+          </div>
+        </div>
+
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label" style="font-size: 16px;">2. 지능형 멀티턴 상태 관리 (State Management)</div>
+          <div class="box-content">
+            <code>useRef</code> 기반의 세션 맥락 보존 객체를 설계하여 단발성 LLM 호출의 한계를 극복하고 자연스러운 대화 유도.
+          </div>
+        </div>
+
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label" style="font-size: 16px;">3. 프론트엔드 파싱 및 UI/UX 세심화 (Text Parsing & UX)</div>
+          <div class="box-content">
+            강조 마크업과 개행 처리가 동시에 동작하는 커스텀 파서를 통해 사용자에게 가독성 높은 챗봇 인터페이스 전달.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <button class="prev-next-btn" onclick="prevSlide()">← 이전 슬라이드</button>
+      <div style="font-size: 14px; color: var(--text-muted);" id="slideIndicator">Slide 1 / 4</div>
+      <button class="prev-next-btn" onclick="nextSlide()">다음 슬라이드 →</button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const indicator = document.getElementById('slideIndicator');
+
+    function showSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      navBtns[currentSlide].classList.remove('active');
+      
+      currentSlide = index;
+      
+      slides[currentSlide].classList.add('active');
+      navBtns[currentSlide].classList.add('active');
+      indicator.innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function prevSlide() {
+      const idx = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(idx);
+    }
+
+    function nextSlide() {
+      const idx = (currentSlide + 1) % slides.length;
+      showSlide(idx);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>
