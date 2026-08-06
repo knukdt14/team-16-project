@@ -2,7 +2,7 @@
 #
 # 실행:  docker compose up --build
 #   - 백엔드  http://localhost:8000  (API 문서 /docs)
-#   - 프론트  http://localhost:8501
+#   - 프론트  http://localhost:3000
 #
 # 모델 전환:
 #   기본값은 Codespaces 등 저사양 환경 기준(1.5B).
@@ -42,9 +42,10 @@ services:
       dockerfile: frontend/Dockerfile
     container_name: ev-frontend
     ports:
-      - "8501:8501"
+      - "3000:3000"
     environment:
-      # 컨테이너 간 통신은 서비스명으로 (localhost 아님)
+      # 브라우저가 접속하는 백엔드 주소 (호스트 기준). Next 는 NEXT_PUBLIC_ 값을
+      # 빌드시 사용하며, 미설정 시 lib/api.js 가 http://localhost:8000 으로 폴백.
       API_BASE_URL: http://backend:8000
     depends_on:
       backend:
