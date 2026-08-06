@@ -1,173 +1,192 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { OUTLINE, JEJU, PROVINCES, makeProjector } from "@/lib/korea";
+import { useEffect, useState } from "react";
+import { ComposableMap, Geographies, Geography, ZoomableGroup, Marker } from "react-simple-maps";
+import { PROVINCES } from "@/lib/korea";
 import { compareSubsidy } from "@/lib/api";
+import { tierOf } from "@/lib/tier";
 
-function lerpColor(t) {
-  const r = Math.round(190 + (4 - 190) * t);
-  const g = Math.round(233 + (120 - 233) * t);
-  const b = Math.round(213 + (87 - 213) * t);
-  return `rgb(${r},${g},${b})`;
+const GEO_URL =
+  "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
+const MODEL = "EV6";
+
+const FULL2SHORT = {
+  서울특별시: "서울", 부산광역시: "부산", 대구광역시: "대구", 인천광역시: "인천",
+  광주광역시: "광주", 대전광역시: "대전", 울산광역시: "울산", 세종특별자치시: "세종",
+  세종특별시: "세종", 경기도: "경기", 강원도: "강원", 강원특별자치도: "강원",
+  충청북도: "충북", 충청남도: "충남", 전라북도: "전북", 전북특별자치도: "전북",
+  전라남도: "전남", 경상북도: "경북", 경상남도: "경남",
+  제주특별자치도: "제주", 제주도: "제주",
+};
+const toShort = (nm = "") => FULL2SHORT[nm] || nm.slice(0, 2);
+
+function colorFor(t) {
+  const a = [209, 240, 222], b = [4, 120, 87];
+  const r = Math.round(a[0] + (b[0] - a[0]) * t);
+  const g = Math.round(a[1] + (b[1] - a[1]) * t);
+  const bl = Math.round(a[2] + (b[2] - a[2]) * t);
+  return `rgb(${r},${g},${bl})`;
 }
 
-function findProvinceName(regionText) {
-  if (!regionText) return null;
-  const str = String(regionText);
-  for (const p of PROVINCES) {
-    if (str.includes(p.name)) return p.name;
-  }
-  if (str.includes("서울")) return "서울";
-  if (str.includes("부산")) return "부산";
-  if (str.includes("대구")) return "대구";
-  if (str.includes("인천")) return "인천";
-  if (str.includes("광주")) return "광주";
-  if (str.includes("대전")) return "대전";
-  if (str.includes("울산")) return "울산";
-  if (str.includes("세종")) return "세종";
-  if (str.includes("경기") || str.includes("성남") || str.includes("수원") || str.includes("용인") || str.includes("고양") || str.includes("부천")) return "경기";
-  if (str.includes("강원") || str.includes("춘천") || str.includes("원주") || str.includes("강릉")) return "강원";
-  if (str.includes("충북") || str.includes("청주") || str.includes("충주")) return "충북";
-  if (str.includes("충남") || str.includes("천안") || str.includes("아산") || str.includes("서산")) return "충남";
-  if (str.includes("전북") || str.includes("전주") || str.includes("익산") || str.includes("군산")) return "전북";
-  if (str.includes("전남") || str.includes("목포") || str.includes("여수") || str.includes("순천")) return "전남";
-  if (str.includes("경북") || str.includes("포항") || str.includes("구미") || str.includes("경주")) return "경북";
-  if (str.includes("경남") || str.includes("창원") || str.includes("김해") || str.includes("진주")) return "경남";
-  if (str.includes("제주")) return "제주";
-  return null;
-}
-
-export default function KoreaMap({ mode, highlightRegion, selectedModel = "EV6" }) {
-  const is3d = mode === "3d";
-  const [zoom, setZoom] = useState(1);
-  const [values, setValues] = useState(() =>
-    Object.fromEntries(PROVINCES.map((p) => [p.name, p.base]))
-  );
+export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metric = "max", onStats, amount }) {
+  const is3d = mode !== "2d";
+  const [maxByS, setMaxByS] = useState({});
+  const [avgByS, setAvgByS] = useState({});
+  const [miniByS, setMiniByS] = useState({});
   const [live, setLive] = useState(false);
+  const [sel, setSel] = useState(null);       // 선택한 시도
+  const [detail, setDetail] = useState(null); // 시군구 목록
+  const [pos, setPos] = useState({ coordinates: [127.8, 35.5], zoom: 1 });
 
-  const activeProvName = useMemo(() => findProvinceName(highlightRegion), [highlightRegion]);
-
+  // 시도별 값
   useEffect(() => {
-    const modelToQuery = selectedModel || "EV6";
-    compareSubsidy(modelToQuery, { limit: 200 })
+    compareSubsidy(MODEL, { limit: 5000 })
       .then((res) => {
-        const byS = {};
+        const mx = {}, sum = {}, cnt = {};
         for (const r of res.rows || []) {
-          byS[r.시도] = Math.max(byS[r.시도] || 0, r.총액);
+          mx[r.시도] = Math.max(mx[r.시도] || 0, r.총액);
+          sum[r.시도] = (sum[r.시도] || 0) + r.총액;
+          cnt[r.시도] = (cnt[r.시도] || 0) + 1;
         }
-        if (Object.keys(byS).length) {
-          setValues((v) => ({ ...v, ...byS }));
+        if (Object.keys(mx).length) {
+          setMaxByS(mx);
+          setAvgByS(Object.fromEntries(Object.keys(sum).map((k) => [k, Math.round(sum[k] / cnt[k])])));
           setLive(true);
+        } else {
+          const base = Object.fromEntries(PROVINCES.map((p) => [p.name, p.base]));
+          setMaxByS(base); setAvgByS(base);
         }
       })
-      .catch(() => setLive(false));
-  }, [selectedModel]);
+      .catch(() => {
+        const base = Object.fromEntries(PROVINCES.map((p) => [p.name, p.base]));
+        setMaxByS(base); setAvgByS(base);
+      });
+    // 경·소형 지도용 (레이 EV 등)
+    compareSubsidy("레이", { limit: 5000 })
+      .then((res) => {
+        const mn = {};
+        for (const r of res.rows || []) mn[r.시도] = Math.max(mn[r.시도] || 0, r.총액);
+        if (Object.keys(mn).length) setMiniByS(mn);
+      })
+      .catch(() => {});
+  }, []);
 
-  const { project, width, height } = useMemo(() => makeProjector({ width: 360, pad: 30 }), []);
+  function openSido(sido) {
+    if (!sido) return;
+    setSel(sido);
+    setDetail(null);
+    const p = PROVINCES.find((x) => x.name === sido);
+    if (p) setPos({ coordinates: [p.lon, p.lat], zoom: 3.2 });
+    // 선택 지역 통계를 KPI로 올림 (경·소형은 지역 기준으로 다시 조회해 정확히)
+    const baseStats = { region: sido, max: maxByS[sido], avg: avgByS[sido], mini: miniByS[sido] };
+    onStats && onStats(baseStats);
+    compareSubsidy("레이", { sido, limit: 200 })
+      .then((res) => {
+        const mx = Math.max(0, ...(res.rows || []).map((r) => r.총액));
+        onStats && onStats({ ...baseStats, mini: mx || baseStats.mini });
+      })
+      .catch(() => {});
+    compareSubsidy(MODEL, { sido, limit: 200 })
+      .then((res) => {
+        const byG = {};
+        for (const r of res.rows || []) {
+          if (!byG[r.시군구] || r.총액 > byG[r.시군구].총액)
+            byG[r.시군구] = { 시군구: r.시군구, 국비: r.국비, 지방비: r.지방비, 총액: r.총액 };
+        }
+        setDetail(Object.values(byG).sort((a, b) => b.총액 - a.총액));
+      })
+      .catch(() => setDetail([]));
+  }
 
-  const squash = is3d ? 0.62 : 1;
-  const yOff = is3d ? height * 0.16 : 0;
-  const disp = (lon, lat) => {
-    const [x, y] = project(lon, lat);
-    return [x, y * squash + yOff];
-  };
+  function clearSel() {
+    setSel(null); setDetail(null);
+    setPos({ coordinates: [127.8, 35.5], zoom: 1 });
+    onClearFocus && onClearFocus();
+    onStats && onStats(null);
+  }
 
-  const outlinePath = useMemo(() => {
-    return (
-      OUTLINE.map(([lo, la], i) => {
-        const [x, y] = disp(lo, la);
-        return `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`;
-      }).join(" ") + " Z"
-    );
-    // eslint-disable-next-line
-  }, [project, is3d]);
+  // 챗봇 "부산 보여줘" → focus
+  useEffect(() => { if (focus) openSido(focus); /* eslint-disable-next-line */ }, [focus]);
 
+  const values = metric === "avg" ? avgByS
+    : metric === "mini" ? (Object.keys(miniByS).length ? miniByS : maxByS)
+    : maxByS;
   const vals = Object.values(values);
-  const min = Math.min(...vals), max = Math.max(...vals);
+  const min = Math.min(...vals, 0), max = Math.max(...vals, 1);
   const norm = (v) => (max === min ? 0.5 : (v - min) / (max - min));
-  const [jx, jy] = disp(JEJU.lon, JEJU.lat);
-  const isJejuActive = activeProvName === "제주";
 
   return (
-    <div className="map-wrap"
-         onWheel={(e) => setZoom((z) => Math.min(3, Math.max(1, +(z + (e.deltaY < 0 ? 0.2 : -0.2)).toFixed(2))))}>
+    <div className="map-wrap">
       <div className="zoom-ctl">
-        <button onClick={() => setZoom((z) => Math.min(3, +(z + 0.3).toFixed(2)))}>+</button>
-        <button onClick={() => setZoom((z) => Math.max(1, +(z - 0.3).toFixed(2)))}>−</button>
-        {zoom > 1 && <button onClick={() => setZoom(1)}>⟲</button>}
+        {sel ? <button title="전체 보기" onClick={clearSel}>⤢</button> : null}
+      </div>
+      {amount && (
+        <div className="map-amount">
+          💰 {amount.region} · {amount.label} 최대
+          <b>{Number(amount.amount).toLocaleString()}만원</b>
+        </div>
+      )}
+
+      <div className={"map-inner" + (is3d ? " tilt" : "")}>
+        <ComposableMap projection="geoMercator"
+                       width={700} height={560}
+                       projectionConfig={{ center: [127.8, 35.6], scale: 6200 }}
+                       style={{ width: "100%", height: "100%" }}>
+          <ZoomableGroup center={pos.coordinates} zoom={pos.zoom} onMoveEnd={setPos}
+                         minZoom={1} maxZoom={10}>
+            <Geographies geography={GEO_URL}>
+              {({ geographies }) =>
+                geographies.map((geo) => {
+                  const nm = geo.properties.name || geo.properties.NAME_1 || "";
+                  const s = toShort(nm);
+                  const v = values[s];
+                  const dim = sel && s !== sel;
+                  return (
+                  <Geography key={geo.rsmKey} geography={geo}
+                      onClick={() => { openSido(s); onRegionAsk && onRegionAsk(s); }}
+                      stroke="#ffffff" strokeWidth={0.7}
+                      style={{
+                        default: { fill: v != null ? colorFor(norm(v)) : "#eef2f6", outline: "none", opacity: dim ? 0.3 : 1, transition: "opacity .3s, fill .2s" },
+                        hover:   { fill: "#0ea5e9", outline: "none", cursor: "pointer", opacity: 1 },
+                        pressed: { fill: "#0284c7", outline: "none", opacity: 1 },
+                      }} />
+                  );
+                })
+              }
+            </Geographies>
+            {PROVINCES.map((p) => values[p.name] != null && (!sel || sel === p.name) && (
+              <Marker key={p.name} coordinates={[p.lon, p.lat]}>
+                <text className="mlabel" textAnchor="middle" y={2}>{p.name} {values[p.name]}</text>
+              </Marker>
+            ))}
+          </ZoomableGroup>
+        </ComposableMap>
       </div>
 
-      <svg className="mapsvg" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet"
-           style={{ transform: `scale(${zoom})`, transformOrigin: "center center" }}>
-        <defs>
-          <linearGradient id="barg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#34d399" />
-            <stop offset="100%" stopColor="#059669" />
-          </linearGradient>
-          <linearGradient id="barhl" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#fbbf24" />
-            <stop offset="100%" stopColor="#d97706" />
-          </linearGradient>
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        {/* 지면 */}
-        <path d={outlinePath} className="land" />
-        <ellipse cx={jx} cy={jy} rx="13" ry={is3d ? 5 : 8} className="land"
-                 stroke={isJejuActive ? "#ef4444" : "none"} strokeWidth={isJejuActive ? 2 : 0} />
-
-        {/* 막대 + 라벨 */}
-        {PROVINCES.filter((p) => p.name !== "제주").map((p) => {
-          const [cx, cy] = disp(p.lon, p.lat);
-          const t = norm(values[p.name]);
-          const isHighlighted = activeProvName === p.name;
-          const hot = isHighlighted || values[p.name] === max;
-          const barColor = isHighlighted ? "url(#barhl)" : hot ? "#f59e0b" : "url(#barg)";
-          const topColor = isHighlighted ? "#fef08a" : hot ? "#fbbf24" : "#6ee7b7";
-
-          if (is3d) {
-            const h = 16 + t * 92;
-            return (
-              <g key={p.name} filter={isHighlighted ? "url(#glow)" : undefined}>
-                <ellipse cx={cx} cy={cy + 2} rx={isHighlighted ? "10" : "7"} ry={isHighlighted ? "4.5" : "3"} fill="rgba(0,0,0,.2)" />
-                {isHighlighted && (
-                  <ellipse cx={cx} cy={cy + 2} rx="14" ry="6" fill="none" stroke="#f59e0b" strokeWidth="2" opacity="0.8" />
-                )}
-                <rect x={cx - (isHighlighted ? 7 : 5)} y={cy - h} width={isHighlighted ? 14 : 10} height={h} rx="3"
-                      fill={barColor} />
-                <ellipse cx={cx} cy={cy - h} rx={isHighlighted ? 7 : 5} ry={isHighlighted ? 3 : 2.2}
-                         fill={topColor} />
-                <text x={cx} y={cy - h - (isHighlighted ? 8 : 6)}
-                      className={"mlabel" + (isHighlighted ? " active-label" : "")}
-                      style={{ fontWeight: isHighlighted ? "bold" : "normal", fill: isHighlighted ? "#fbbf24" : undefined }}>
-                  {isHighlighted ? `📍 ${p.name}` : p.name} {values[p.name]}
-                </text>
-              </g>
-            );
-          }
-          const col = isHighlighted ? "#f59e0b" : lerpColor(t);
-          return (
-            <g key={p.name} filter={isHighlighted ? "url(#glow)" : undefined}>
-              {isHighlighted && (
-                <circle cx={cx} cy={cy} r={16 + t * 8} fill="none" stroke="#f59e0b" strokeWidth="2.5" opacity="0.8" />
-              )}
-              <circle cx={cx} cy={cy} r={8 + t * 8} fill={col}
-                      stroke={hot ? "#f59e0b" : "#0f766e"} strokeWidth={hot ? 2.5 : 1} />
-              <text x={cx} y={cy - 12} className={"mlabel" + (isHighlighted ? " active-label" : "")}
-                    style={{ fontWeight: isHighlighted ? "bold" : "normal", fill: isHighlighted ? "#fbbf24" : undefined }}>
-                {isHighlighted ? `📍 ${p.name}` : p.name} {values[p.name]}
-              </text>
-            </g>
-          );
-        })}
-        <text x={jx} y={jy + (is3d ? 14 : 22)} className="mlabel">제주 {values["제주"]}</text>
-      </svg>
+      {sel && (
+        <div className="drill">
+            <div className="drill-h">
+              <span>📍 {sel} · 시군구별 (EV6, 만원)</span>
+              <button onClick={clearSel}>✕</button>
+            </div>
+            <div className="drill-list">
+              {detail === null && <div className="muted">불러오는 중…</div>}
+              {detail && detail.length === 0 && <div className="muted">데이터 없음</div>}
+              {detail && detail.map((d) => (
+                <div className="drill-row" key={d.시군구}>
+                  <span>{tierOf(d.총액).icon} {d.시군구}</span>
+                  <span className="drill-amt">
+                    <b>{d.총액.toLocaleString()}</b>
+                    <em>국비 {d.국비} · 지방비 {d.지방비}</em>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
       <div className="map-legend">
-        {activeProvName && <span style={{ color: "#fbbf24", fontWeight: "bold", marginRight: 8 }}>📍 {activeProvName} 선택됨</span>}
-        <span style={{ color: "var(--accent)", fontWeight: "bold" }}>🚗 {selectedModel}</span> {live ? "기준 · 백엔드 실시간 연동" : "기준"} · 색·높이 = 보조금 총액(만원)
+        {sel ? `🔎 ${sel} 집중 · 시군구별 보조금 (⤢ 전체 보기)` :
+          `${is3d ? "3D" : "2D"} · ${metric === "mini" ? "경·소형" : metric === "avg" ? "EV6 지역 평균" : "EV6 지역 최고"} 보조금${live ? "" : " (개요)"} · 시도 클릭 → 시군구 상세 · 드래그 회전·휠 확대`}
       </div>
     </div>
   );
