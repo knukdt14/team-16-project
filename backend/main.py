@@ -174,7 +174,7 @@ async def get_subsidy(
 async def compare(
     model: str = Query(..., description="비교할 차종", examples=["EV6"]),
     sido: str | None = Query(None, description="특정 시도로 한정", examples=["경기"]),
-    limit: int = Query(30, ge=1, le=200, description="반환 개수"),
+    limit: int = Query(30, ge=1, le=500, description="반환 개수"),
     order: str = Query("desc", pattern="^(asc|desc)$", description="총액 정렬"),
 ):
     """
@@ -188,10 +188,12 @@ async def compare(
         raise HTTPException(404, f"'{model}' 에 해당하는 차량을 찾지 못했습니다.")
 
     df = p.lookup.df[p.lookup.df["모델명"].isin(models)]
+    # 보조금/국비/지방비에 빈값(NaN)이 있으면 idxmax·int() 에서 500 이 나므로 제거
+    df = df.dropna(subset=["보조금(만원)", "국비(만원)", "지방비(만원)"])
     if sido:
         df = df[df["시도"] == sido]
-        if df.empty:
-            raise HTTPException(404, f"'{sido}' 지역 데이터가 없습니다.")
+    if df.empty:
+        return CompareResponse(model_query=model, matched_models=models, count=0, rows=[])
 
     # 지역별 최고 금액 1건씩
     idx = df.groupby(["시도", "시군구"])["보조금(만원)"].idxmax()
