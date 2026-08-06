@@ -364,7 +364,7 @@
         <div class="card-box symptom">
           <div class="box-label">🚨 현상 (Symptom)</div>
           <div class="box-content">
-            "부산 얼마야?" 대화 후 사용자가 차량명("EV6")이나 트림만 입력 시, 이전 지역("부산")을 기억하지 못하고 다시 지역을 되묻는 현상.
+            지도 선택("경남") 후 차종("코나") 또는 트림("코나 롱레인지")을 대답해도, 이전 지역 정보를 기억하지 못하고 <b>"거주하시는 지역을 알려주세요"</b>라며 지역을 계속 다시 되묻는 <b>무한 되묻기 루프 현상</b> 발생.
           </div>
         </div>
 
@@ -375,20 +375,35 @@
           </div>
         </div>
 
-        <div class="card-box solution">
-          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+        <!-- 3장 사진 세로 연결 비주얼 예시 박스 -->
+        <div class="card-box" style="grid-column: span 2; background: rgba(0, 0, 0, 0.3); padding: 18px;">
+          <div class="box-label" style="color: #f87171; margin-bottom: 12px;">🔄 대화 맥락 유실 - 무한 되묻기 루프 대화 예시 (1 ➔ 2 ➔ 3단계 흐름)</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; max-width: 650px; margin: 0 auto;">
+            <div style="width: 100%; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 4px; text-align: left;">1단계: 지도 지역("경남") 선택 후 차종("코나") 대답</div>
+              <img src="issue2_loop1.png" alt="1단계 차종 대답" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="font-size: 16px; color: #f87171; font-weight: 800;">↓</div>
+            <div style="width: 100%; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 4px; text-align: left;">2단계: 경남 유실 -> 거주 지역 다시 물음 -> 트림 대답</div>
+              <img src="issue2_loop2.png" alt="2단계 지역 다시 물음 및 트림 대답" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="font-size: 16px; color: #f87171; font-weight: 800;">↓</div>
+            <div style="width: 100%; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px; text-align: left; background: rgba(239, 68, 68, 0.15); padding: 3px 6px; border-radius: 4px;">3단계: 또다시 경남 유실 -> "거주하시는 지역을 알려주세요" 무한 되묻기 루프 갇힘</div>
+              <img src="issue2_loop3.png" alt="3단계 무한 되묻기 루프 발생" style="width: 100%; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3);" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label">🛠️ 해결 방안 및 성과 (Solution & Result)</div>
           <div class="box-content">
             <ul>
               <li>프론트엔드(<code>Chatbot.jsx</code>) 내 <code>useRef</code> 기반 대화 맥락 객체(<code>ctx.current = { region, model }</code>) 구축.</li>
               <li>지도 클릭 및 되묻기 옵션 선택 시 이전 지역/차종을 메모리에 누적 보존하여 백엔드 전송 시 함께 누적 전달하도록 상태 관리 개편.</li>
+              <li>이전 대화 맥락을 완벽히 기억하는 자연스러운 <b>멀티턴(Multi-turn) 대화 흐름 및 사용자 경험(UX) 완성</b>.</li>
             </ul>
-          </div>
-        </div>
-
-        <div class="card-box result">
-          <div class="box-label">💡 성과 (Result)</div>
-          <div class="box-content">
-            이전 대화 맥락을 완벽히 기억하는 자연스러운 <b>멀티턴(Multi-turn) 대화 흐름 및 사용자 경험(UX) 완성</b>.
           </div>
         </div>
       </div>
