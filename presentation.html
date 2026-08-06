@@ -375,7 +375,7 @@
     <div class="slide">
       <div class="slide-header">
         <div class="slide-title">
-          <span>📝 ISSUE 03. 챗봇 답변 텍스트 개행(\n) 및 파서 렌더링 미반영</span>
+          <span>📝 ISSUE 03. 챗봇 답변 텍스트 개행(\n) 및 파서 렌더링 미반영 결함</span>
         </div>
         <div class="slide-number">03 / 04</div>
       </div>
@@ -383,7 +383,7 @@
         <div class="card-box symptom">
           <div class="box-label">🚨 현상 (Symptom)</div>
           <div class="box-content">
-            LLM 및 백엔드에서 개행 문자(<code>\n</code>)를 포함하여 응답을 반환해도 챗봇 대화창에서 줄바꿈이 무시되고 텍스트가 한 줄로 빽빽하게 렌더링됨.
+            LLM 및 백엔드에서 개행 문자(<code>\n</code>) 및 <code>**강조**</code> 마크업을 포함하여 응답을 반환해도 챗봇 대화창에서 줄바꿈이 무시되고 텍스트가 한 줄로 빽빽하게 렌더링됨.
           </div>
         </div>
 
@@ -394,20 +394,33 @@
           </div>
         </div>
 
-        <div class="card-box solution">
-          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+        <!-- 이미지 비포/애프터 비교 뷰 -->
+        <div class="card-box" style="grid-column: span 2; background: rgba(0, 0, 0, 0.3); padding: 16px;">
+          <div class="box-label" style="color: #60a5fa; margin-bottom: 12px;">🖼️ 렌더링 비교 예시 (Before vs After)</div>
+          <div style="display: flex; gap: 16px; justify-content: center; align-items: flex-start; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px; max-width: 48%; text-align: center;">
+              <div style="font-size: 13px; font-weight: 700; color: #ef4444; margin-bottom: 6px; background: rgba(239, 68, 68, 0.15); padding: 4px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                ❌ 수정 전 (1번 사진: 줄바꿈 미반영)
+              </div>
+              <img src="img_before.png" alt="줄바꿈 미반영 예시" style="width: 100%; max-height: 380px; object-fit: contain; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="flex: 1; min-width: 260px; max-width: 48%; text-align: center;">
+              <div style="font-size: 13px; font-weight: 700; color: #10b981; margin-bottom: 6px; background: rgba(16, 185, 129, 0.15); padding: 4px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                ✅ 수정 후 (2번 사진: 줄바꿈 반영)
+              </div>
+              <img src="img_after.png" alt="줄바꿈 반영 예시" style="width: 100%; max-height: 380px; object-fit: contain; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label">🛠️ 해결 방안 및 성과 (Solution & Result)</div>
           <div class="box-content">
             <ul>
               <li><code>renderAnswer</code> 파싱 도우미 함수 설계: 텍스트를 <code>\n</code> 단위로 split 후 개행(<code>&lt;br /&gt;</code>) 노드로 전환.</li>
               <li>기존 <code>**강조(Bold)**</code> 마크업 파서 정규식과 통합하여 단락과 강조 텍스트가 동시에 정상 적용되도록 고도화.</li>
+              <li>규정/근거 등 복잡하고 긴 답변 텍스트의 <b>가독성 및 UI 문단 구획 완성도 극대화</b>.</li>
             </ul>
-          </div>
-        </div>
-
-        <div class="card-box result">
-          <div class="box-label">💡 성과 (Result)</div>
-          <div class="box-content">
-            규정/근거 등 복잡하고 긴 답변 텍스트의 <b>가독성 및 UI 문단 구획 완성도 극대화</b>.
           </div>
         </div>
       </div>
