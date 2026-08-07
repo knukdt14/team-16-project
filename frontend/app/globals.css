@@ -571,10 +571,13 @@ body:not(.dark) { background: #ffffff; }
 }
 .map-amount b { transition: color .2s ease; }
 
-/* ===== PWA 설치 버튼 ===== */
-.pwa-install { position: fixed; right: 18px; bottom: 18px; z-index: 60;
-  border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px;
+/* ===== PWA 설치 버튼 (좌측 하단 — 챗봇/투어 버튼과 겹치지 않게 위로 스택) ===== */
+.pwa-wrap { position: fixed; left: 22px; bottom: 88px; z-index: 61;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.pwa-install { border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px;
   padding: 10px 16px; border-radius: 24px; cursor: pointer;
   box-shadow: 0 8px 24px rgba(16,185,129,.4); animation: pwaIn .4s ease both; }
 .pwa-install:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(16,185,129,.5); transition: all .15s ease; }
+.pwa-hint { max-width: 240px; background: #111827; color: #fff; font-size: 12px; line-height: 1.5;
+  padding: 9px 12px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.25); animation: pwaIn .3s ease both; }
 @keyframes pwaIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
