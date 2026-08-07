@@ -37,6 +37,25 @@ function ripple(e) {
   setTimeout(() => d.remove(), 650);
 }
 
+// 숫자 카운트업 애니메이션 (0 → 목표 금액을 부드럽게 굴림)
+function CountUp({ value = 0, dur = 900 }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    let raf, start;
+    const from = 0, to = Number(value) || 0;
+    const step = (t) => {
+      if (!start) start = t;
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      setN(Math.round(from + (to - from) * eased));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value, dur]);
+  return <>{n.toLocaleString()}</>;
+}
+
 export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metric = "max", onStats, amount }) {
   const is3d = mode !== "2d";
   const [maxByS, setMaxByS] = useState({});
@@ -135,9 +154,10 @@ export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metri
         {sel ? <button title="전체 보기" onClick={clearSel}>⤢</button> : null}
       </div>
       {amount && (
-        <div className="map-amount">
+        <div className="map-amount" key={`${amount.region}-${amount.label}-${amount.amount}`}>
+          <span className="pulse-ring" aria-hidden />
           💰 {amount.region} · {amount.label} 최대
-          <b>{Number(amount.amount).toLocaleString()}만원</b>
+          <b><CountUp value={amount.amount} />만원</b>
         </div>
       )}
 

@@ -6,6 +6,7 @@ import { PROVINCES } from "@/lib/korea";
 import { baseModelsFrom } from "@/lib/models";
 import { tierOf } from "@/lib/tier";
 import { getCarImage } from "@/lib/carImages";
+import { sttSupported, ttsSupported, createRecognition, speak, stopSpeaking } from "@/lib/voice";
 
 // 줄바굀()을 <br>(또는 파라그래프)로 변환하고, **bold** 마크업을 <b>로 적용
 function renderAnswer(text) {
@@ -130,6 +131,42 @@ export default function Chatbot({ onMapMode, mapMode, onFocus, regionAsk, onAddC
   const ctx = useRef({ region: null, model: null, lastQ: "" }); // 대화 맥락
   const bodyRef = useRef(null);
 
+  // 🎤 음성 대화 (Web Speech API) — Streamlit 불가 기능
+  const [listening, setListening] = useState(false);
+  const [autoRead, setAutoRead] = useState(false);
+  const recRef = useRef(null);
+  const voiceOn = sttSupported();
+  const ttsOn = ttsSupported();
+
+  // 마이크 토글: 켜면 음성인식 시작 → 최종 문장이 나오면 자동 전송
+  function toggleMic() {
+    if (!voiceOn || loading) return;
+    if (listening) { recRef.current?.stop(); return; }
+    const rec = createRecognition({
+      onResult: ({ interim, final }) => {
+        setText(final || interim);
+        if (final) { setListening(false); send(final); }
+      },
+      onEnd: () => setListening(false),
+      onError: () => setListening(false),
+    });
+    if (!rec) return;
+    recRef.current = rec;
+    setText("");
+    setListening(true);
+    try { rec.start(); } catch { setListening(false); }
+  }
+
+  // 자동낭독 켜져 있으면 새 봇 답변을 음성으로 읽기
+  useEffect(() => {
+    if (!autoRead || !ttsOn) return;
+    const last = messages[messages.length - 1];
+    if (last?.role === "bot" && last.answer) speak(last.answer);
+  }, [messages, autoRead, ttsOn]);
+
+  // 언마운트 시 낭독 중단
+  useEffect(() => () => stopSpeaking(), []);
+
   useEffect(() => {
     getModels().then((r) => setModels(baseModelsFrom(r))).catch(() => { });
   }, []);
@@ -253,6 +290,15 @@ export default function Chatbot({ onMapMode, mapMode, onFocus, regionAsk, onAddC
           <span className="s" style={{ color: online === false ? "#ef4444" : "var(--accent)" }}>
             ● {online === false ? "offline" : online === null ? "연결 확인 중" : "online"}
           </span>
+          {ttsOn && (
+            <button
+              className={"voice-toggle" + (autoRead ? " on" : "")}
+              title={autoRead ? "답변 음성 낭독 켜짐" : "답변 음성 낭독 꺼짐"}
+              onClick={() => { if (autoRead) stopSpeaking(); setAutoRead((v) => !v); }}
+            >
+              {autoRead ? "🔊" : "🔈"}
+            </button>
+          )}
           <button className="chat-close" onClick={onClose}>✕</button>
         </div>
 
@@ -279,8 +325,18 @@ export default function Chatbot({ onMapMode, mapMode, onFocus, regionAsk, onAddC
         </div>
 
         <form className="inputbar" onSubmit={(e) => { e.preventDefault(); send(text); }}>
+          {voiceOn && (
+            <button
+              type="button"
+              className={"mic-btn" + (listening ? " listening" : "")}
+              title={listening ? "듣는 중… (클릭하면 중지)" : "음성으로 질문하기"}
+              onClick={toggleMic}
+            >
+              {listening ? "🔴" : "🎤"}
+            </button>
+          )}
           <input value={text} onChange={(e) => setText(e.target.value)}
-            placeholder="전기차 보조금에 대해 물어보세요…" />
+            placeholder={listening ? "듣고 있어요… 말씀하세요" : "전기차 보조금에 대해 물어보세요…"} />
           <button type="submit">전송</button>
         </form>
       </div>
