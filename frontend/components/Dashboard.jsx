@@ -15,8 +15,12 @@ import { getHealth } from "@/lib/api";
 const KoreaMap = dynamic(() => import("./KoreaMap"), {
   ssr: false,
   loading: () => (
-    <div style={{ height: 440, display: "grid", placeItems: "center", color: "var(--muted)" }}>
-      지도 불러오는 중…
+    <div className="map-skel">
+      <div className="skel skel-map" />
+      <div className="skel-row">
+        <div className="skel skel-pill" /><div className="skel skel-pill" /><div className="skel skel-pill" />
+      </div>
+      <span className="skel-txt">지도 불러오는 중…</span>
     </div>
   ),
 });
@@ -55,14 +59,21 @@ export default function Dashboard() {
 
   return (
     <div className={"app" + (dark ? " dark" : "")}>
+      <div className="loadbar" />
       <motion.div className="topbar"
-        initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, ease: "easeOut" }}>
         <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit" }}>EV <b>SUBSIDY</b></Link>
         <div className="nav">
           {TABS.map(([k, label]) => (
-            <motion.span key={k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}
-              whileHover={{ y: -2 }} whileTap={{ scale: 0.94 }} style={{ cursor: "pointer" }}>
-              {k === "cart" && cart.length ? `${label} (${cart.length})` : label}
+            <motion.span key={k} className={"navtab" + (tab === k ? " on" : "")} onClick={() => setTab(k)}
+              whileTap={{ scale: 0.94 }} style={{ cursor: "pointer" }}>
+              {tab === k && (
+                <motion.span layoutId="navpill" className="navpill"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }} />
+              )}
+              <span className="navtab-label">
+                {k === "cart" && cart.length ? `${label} (${cart.length})` : label}
+              </span>
             </motion.span>
           ))}
         </div>
@@ -72,7 +83,7 @@ export default function Dashboard() {
       {/* 히어로 */}
       <div className="hero">
         <div className="hero-kick">2026 전기차 구매보조금</div>
-        <h1 className="hero-h">지금 내 지역, 얼마나 받을까?</h1>
+        <h1 className="hero-h">지금 내 지역, 얼마나 <span className="em">받을까?</span></h1>
         <p className="hero-p">지역과 차종을 고르면 국비·지방비를 합친 실수령 보조금을 바로 보여드려요.</p>
       </div>
 

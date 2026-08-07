@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { ComposableMap, Geographies, Geography, ZoomableGroup, Marker } from "react-simple-maps";
 import { PROVINCES } from "@/lib/korea";
 import { compareSubsidy } from "@/lib/api";
@@ -27,6 +28,15 @@ function colorFor(t) {
   return `rgb(${r},${g},${bl})`;
 }
 
+function ripple(e) {
+  const d = document.createElement("div");
+  d.className = "map-ripple";
+  d.style.left = e.clientX + "px";
+  d.style.top = e.clientY + "px";
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 650);
+}
+
 export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metric = "max", onStats, amount }) {
   const is3d = mode !== "2d";
   const [maxByS, setMaxByS] = useState({});
@@ -36,6 +46,7 @@ export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metri
   const [sel, setSel] = useState(null);       // 선택한 시도
   const [detail, setDetail] = useState(null); // 시군구 목록
   const [pos, setPos] = useState({ coordinates: [127.8, 35.5], zoom: 1 });
+  const [tip, setTip] = useState(null); // 지도 hover 툴팁
 
   // 시도별 값
   useEffect(() => {
@@ -116,6 +127,10 @@ export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metri
 
   return (
     <div className="map-wrap">
+      {tip && tip.v != null && typeof document !== "undefined" && createPortal(
+        <div className="map-tip" style={{ left: tip.x, top: tip.y }}>
+          {tip.name}<b>{tip.v.toLocaleString()}만원</b>
+        </div>, document.body)}
       <div className="zoom-ctl">
         {sel ? <button title="전체 보기" onClick={clearSel}>⤢</button> : null}
       </div>
@@ -123,6 +138,20 @@ export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metri
         <div className="map-amount">
           💰 {amount.region} · {amount.label} 최대
           <b>{Number(amount.amount).toLocaleString()}만원</b>
+        </div>
+      )}
+
+      {!sel && Object.keys(values).length > 0 && (
+        <div className="map-rank">
+          <div className="rank-title">지역 TOP 5</div>
+          {Object.entries(values).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, val], i) => (
+            <div className="rank-row" key={name}>
+              <span className="rank-n">{i + 1}</span>
+              <span className="rank-name">{name}</span>
+              <div className="rank-bar"><i style={{ width: (max ? (val / max) * 100 : 0) + "%" }} /></div>
+              <span className="rank-val">{val}</span>
+            </div>
+          ))}
         </div>
       )}
 
@@ -142,7 +171,9 @@ export default function KoreaMap({ mode, focus, onClearFocus, onRegionAsk, metri
                   const dim = sel && s !== sel;
                   return (
                   <Geography key={geo.rsmKey} geography={geo}
-                      onClick={() => { openSido(s); onRegionAsk && onRegionAsk(s); }}
+                      onClick={(e) => { ripple(e); openSido(s); onRegionAsk && onRegionAsk(s); }}
+                      onMouseMove={(e) => setTip({ name: s, v, x: e.clientX, y: e.clientY })}
+                      onMouseLeave={() => setTip(null)}
                       stroke="#ffffff" strokeWidth={0.7}
                       style={{
                         default: { fill: v != null ? colorFor(norm(v)) : "#eef2f6", outline: "none", opacity: dim ? 0.3 : 1, transition: "opacity .3s, fill .2s" },
