@@ -296,36 +296,59 @@
         <div class="slide-number">01 / 04</div>
       </div>
       <div class="grid-2x2">
-        <div class="card-box symptom">
+
+        <!-- 1. 현상 (Symptom) - 1번 & 2번 사진 -->
+        <div class="card-box symptom" style="grid-column: span 2;">
           <div class="box-label">🚨 현상 (Symptom)</div>
-          <div class="box-content">
-            지도의 특정 시도(전북, 충남, 충북, 경북 등) 클릭 시 상세 보조금 데이터가 렌더링되지 않고 <b>'데이터 없음'</b>으로 표시됨.
+          <div class="box-content" style="margin-bottom: 12px;">
+            지도의 특정 시도(전북, 충남, 충북, 경북 등) 클릭 시 상세 보조금 데이터가 렌더링되지 않고 <b>'데이터 없음'</b>으로 표시되는 반면, 보조금이 1,000만원 미만인 지역(경남 등)은 정상 출력됨.
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 220px; text-align: center;">
+              <div style="font-size: 12px; font-weight: 700; color: #10b981; margin-bottom: 4px; background: rgba(16, 185, 129, 0.15); padding: 3px; border-radius: 4px;">
+                1번 사진: 경남 (977만원 - 1000만 미만 정상)
+              </div>
+              <img src="issue1_symptom1.png" alt="경남 정상 렌더링 예시" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="flex: 1; min-width: 220px; text-align: center;">
+              <div style="font-size: 12px; font-weight: 700; color: #ef4444; margin-bottom: 4px; background: rgba(239, 68, 68, 0.15); padding: 3px; border-radius: 4px;">
+                2번 사진: 경북 (1000만 이상 '데이터 없음' 에러)
+              </div>
+              <img src="issue1_symptom2.png" alt="경북 데이터 없음 에러 예시" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
           </div>
         </div>
 
+        <!-- 2. 원인 (Cause) - 3번 사진 -->
         <div class="card-box cause">
-          <div class="box-label">🔍 원인 (Root Cause)</div>
+          <div class="box-label">🔍 원인 예시 (3번 사진)</div>
           <div class="box-content">
-            보조금 1,000만원 이상 지역의 CSV 데이터에 <code>"1,351"</code>과 같이 천 단위 쉼표(,)가 포함된 문자열 존재. 백엔드 <code>int()</code> 형변환 시 <code>ValueError</code> 발생.
+            보조금 1,000만원 이상 데이터에 <code>1,028</code>과 같이 천 단위 쉼표(<code>,</code>)가 포함되어 백엔드 <code>int()</code> 변환 시 <code>ValueError</code> 발생.
+            <div style="margin-top: 10px; text-align: center;">
+              <img src="issue1_cause.png" alt="원인 CSV 쉼표 예시" style="width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);" />
+            </div>
           </div>
         </div>
 
-        <div class="card-box solution">
-          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+        <!-- 3. 해결 (Solution) - 4번 사진 -->
+        <div class="card-box solution" style="grid-column: span 1;">
+          <div class="box-label">🛠️ 해결 예시 (4번 사진)</div>
           <div class="box-content">
-            <ul>
-              <li>백엔드/AI 모델 로직은 그대로 유지한 채, 원본 CSV 데이터 전처리 스크립트 작성 및 실행.</li>
-              <li>수치 데이터 컬럼 내 쉼표(<code>,</code>)를 일괄 제거하여 파이썬 정수형(int)으로 즉시 변환되도록 안전한 데이터 파이프라인 형성.</li>
-            </ul>
+            데이터 전처리 스크립트를 작성하여 수치 컬럼 내 쉼표(<code>,</code>)를 일괄 제거해 <code>1028</code> 정수형으로 즉시 파싱 가능하도록 최적화.
+            <div style="margin-top: 10px; text-align: center;">
+              <img src="issue1_solution.png" alt="해결 CSV 쉼표 제거 예시" style="width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);" />
+            </div>
           </div>
         </div>
 
-        <div class="card-box result">
+        <!-- 4. 성과 (Result) -->
+        <div class="card-box result" style="grid-column: span 2;">
           <div class="box-label">💡 성과 (Result)</div>
           <div class="box-content">
             데이터 파싱 예외 완전 방어 및 전국 17개 지자체 보조금 지도 상세 렌더링 <b>100% 정상 구동 달성</b>.
           </div>
         </div>
+
       </div>
     </div>
 
@@ -341,7 +364,7 @@
         <div class="card-box symptom">
           <div class="box-label">🚨 현상 (Symptom)</div>
           <div class="box-content">
-            "부산 얼마야?" 대화 후 사용자가 차량명("EV6")이나 트림만 입력 시, 이전 지역("부산")을 기억하지 못하고 다시 지역을 되묻는 현상.
+            지도 선택("경남") 후 차종("코나") 또는 트림("코나 롱레인지")을 대답해도, 이전 지역 정보를 기억하지 못하고 <b>"거주하시는 지역을 알려주세요"</b>라며 지역을 계속 다시 되묻는 <b>무한 되묻기 루프 현상</b> 발생.
           </div>
         </div>
 
@@ -352,20 +375,35 @@
           </div>
         </div>
 
-        <div class="card-box solution">
-          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+        <!-- 3장 사진 세로 연결 비주얼 예시 박스 -->
+        <div class="card-box" style="grid-column: span 2; background: rgba(0, 0, 0, 0.3); padding: 18px;">
+          <div class="box-label" style="color: #f87171; margin-bottom: 12px;">🔄 대화 맥락 유실 - 무한 되묻기 루프 대화 예시 (1 ➔ 2 ➔ 3단계 흐름)</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; max-width: 650px; margin: 0 auto;">
+            <div style="width: 100%; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 4px; text-align: left;">1단계: 지도 지역("경남") 선택 후 차종("코나") 대답</div>
+              <img src="issue2_loop1.png" alt="1단계 차종 대답" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="font-size: 16px; color: #f87171; font-weight: 800;">↓</div>
+            <div style="width: 100%; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 4px; text-align: left;">2단계: 경남 유실 -> 거주 지역 다시 물음 -> 트림 대답</div>
+              <img src="issue2_loop2.png" alt="2단계 지역 다시 물음 및 트림 대답" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="font-size: 16px; color: #f87171; font-weight: 800;">↓</div>
+            <div style="width: 100%; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px; text-align: left; background: rgba(239, 68, 68, 0.15); padding: 3px 6px; border-radius: 4px;">3단계: 또다시 경남 유실 -> "거주하시는 지역을 알려주세요" 무한 되묻기 루프 갇힘</div>
+              <img src="issue2_loop3.png" alt="3단계 무한 되묻기 루프 발생" style="width: 100%; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3);" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label">🛠️ 해결 방안 및 성과 (Solution & Result)</div>
           <div class="box-content">
             <ul>
               <li>프론트엔드(<code>Chatbot.jsx</code>) 내 <code>useRef</code> 기반 대화 맥락 객체(<code>ctx.current = { region, model }</code>) 구축.</li>
               <li>지도 클릭 및 되묻기 옵션 선택 시 이전 지역/차종을 메모리에 누적 보존하여 백엔드 전송 시 함께 누적 전달하도록 상태 관리 개편.</li>
+              <li>이전 대화 맥락을 완벽히 기억하는 자연스러운 <b>멀티턴(Multi-turn) 대화 흐름 및 사용자 경험(UX) 완성</b>.</li>
             </ul>
-          </div>
-        </div>
-
-        <div class="card-box result">
-          <div class="box-label">💡 성과 (Result)</div>
-          <div class="box-content">
-            이전 대화 맥락을 완벽히 기억하는 자연스러운 <b>멀티턴(Multi-turn) 대화 흐름 및 사용자 경험(UX) 완성</b>.
           </div>
         </div>
       </div>
@@ -375,7 +413,7 @@
     <div class="slide">
       <div class="slide-header">
         <div class="slide-title">
-          <span>📝 ISSUE 03. 챗봇 답변 텍스트 개행(\n) 및 파서 렌더링 미반영</span>
+          <span>📝 ISSUE 03. 챗봇 답변 텍스트 개행(\n) 및 파서 렌더링 미반영 결함</span>
         </div>
         <div class="slide-number">03 / 04</div>
       </div>
@@ -383,7 +421,7 @@
         <div class="card-box symptom">
           <div class="box-label">🚨 현상 (Symptom)</div>
           <div class="box-content">
-            LLM 및 백엔드에서 개행 문자(<code>\n</code>)를 포함하여 응답을 반환해도 챗봇 대화창에서 줄바꿈이 무시되고 텍스트가 한 줄로 빽빽하게 렌더링됨.
+            LLM 및 백엔드에서 개행 문자(<code>\n</code>) 및 <code>**강조**</code> 마크업을 포함하여 응답을 반환해도 챗봇 대화창에서 줄바꿈이 무시되고 텍스트가 한 줄로 빽빽하게 렌더링됨.
           </div>
         </div>
 
@@ -394,20 +432,33 @@
           </div>
         </div>
 
-        <div class="card-box solution">
-          <div class="box-label">🛠️ 해결 방안 (Solution)</div>
+        <!-- 이미지 비포/애프터 비교 뷰 -->
+        <div class="card-box" style="grid-column: span 2; background: rgba(0, 0, 0, 0.3); padding: 16px;">
+          <div class="box-label" style="color: #60a5fa; margin-bottom: 12px;">🖼️ 렌더링 비교 예시 (Before vs After)</div>
+          <div style="display: flex; gap: 16px; justify-content: center; align-items: flex-start; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px; max-width: 48%; text-align: center;">
+              <div style="font-size: 13px; font-weight: 700; color: #ef4444; margin-bottom: 6px; background: rgba(239, 68, 68, 0.15); padding: 4px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                ❌ 수정 전 (1번 사진: 줄바꿈 미반영)
+              </div>
+              <img src="img_before.png" alt="줄바꿈 미반영 예시" style="width: 100%; max-height: 380px; object-fit: contain; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+            <div style="flex: 1; min-width: 260px; max-width: 48%; text-align: center;">
+              <div style="font-size: 13px; font-weight: 700; color: #10b981; margin-bottom: 6px; background: rgba(16, 185, 129, 0.15); padding: 4px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                ✅ 수정 후 (2번 사진: 줄바꿈 반영)
+              </div>
+              <img src="img_after.png" alt="줄바꿈 반영 예시" style="width: 100%; max-height: 380px; object-fit: contain; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box solution" style="grid-column: span 2;">
+          <div class="box-label">🛠️ 해결 방안 및 성과 (Solution & Result)</div>
           <div class="box-content">
             <ul>
               <li><code>renderAnswer</code> 파싱 도우미 함수 설계: 텍스트를 <code>\n</code> 단위로 split 후 개행(<code>&lt;br /&gt;</code>) 노드로 전환.</li>
               <li>기존 <code>**강조(Bold)**</code> 마크업 파서 정규식과 통합하여 단락과 강조 텍스트가 동시에 정상 적용되도록 고도화.</li>
+              <li>규정/근거 등 복잡하고 긴 답변 텍스트의 <b>가독성 및 UI 문단 구획 완성도 극대화</b>.</li>
             </ul>
-          </div>
-        </div>
-
-        <div class="card-box result">
-          <div class="box-label">💡 성과 (Result)</div>
-          <div class="box-content">
-            규정/근거 등 복잡하고 긴 답변 텍스트의 <b>가독성 및 UI 문단 구획 완성도 극대화</b>.
           </div>
         </div>
       </div>
